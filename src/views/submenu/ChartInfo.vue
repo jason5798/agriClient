@@ -13,7 +13,7 @@
     <div class="container">
       <div class="row data-block">
         <div class="col-md-4">
-
+          溫度
           <h5>
             {{tmp}}°C
           </h5>
@@ -158,7 +158,7 @@
         borderWidth: 5
       },
       point: {
-        radius: 3,
+        radius: 0,
         hitRadius: 10,
         hoverRadius: 4
       }
@@ -215,7 +215,8 @@
       },
       updateChart (val) {
         console.log('test val : ' + JSON.stringify(val))
-        var url = queryPath + '?mac=' + val.mac
+
+        var url = queryPath + '?mac=' + val.mac + '&from=2017-09-27 00:00'
 
         Vue.axios.get(url).then((response) => {
           var datas = response.data
@@ -259,7 +260,10 @@
             this.ph = (datas.ph)[datas.ph.length - 1].toFixed(2)
             this.water = (datas.water)[datas.water.length - 1].toFixed(2)
             this.ec = (datas.ec)[datas.ec.length - 1].toFixed(2)
-            console.log(typeof this.tmpMax + 'max : ' + this.tmpMax + ' , min : ' + this.tmpMin)
+            console.log('temprature max : ' + this.tmpMax + ' , min : ' + this.tmpMin)
+            console.log('ph max : ' + this.phMax + ' , min : ' + this.phMin)
+            console.log('water max : ' + this.waterMax + ' , min : ' + this.waterMin)
+            console.log('ec max : ' + this.ecMax + ' , min : ' + this.ecMin)
             for (var i = 0; i < length; i++) {
               if (i === 0) {
                 time.push('00:01')
@@ -329,20 +333,11 @@
         this.$emit('click-close')
       },
       getMaxOfArray (numArray) {
-        var num = Math.max.apply(null, numArray)
-        if (typeof num === 'string') {
-          return 0
-        } else {
-          return num
-        }
+        console.log('getMaxOfArray => ' + numArray)
+        return Math.max.apply(null, numArray)
       },
       getMinOfArray (numArray) {
-        var num1 = Math.max.apply(null, numArray)
-        if (typeof num1 === 'string') {
-          return 0
-        } else {
-          return num1
-        }
+        return Math.min.apply(null, numArray)
       }
     }
   }
