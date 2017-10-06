@@ -32,46 +32,24 @@
     </div>
     <div v-show="isOverLoading" id="over_view_loading" >
 
-        <Spin fix>
-          <Icon type="load-c" size=40 class="demo-spin-icon-load"></Icon>
-          <div>Loading</div>
-        </Spin>
-      </div>
+      <Spin fix>
+        <Icon type="load-c" size=40 class="demo-spin-icon-load"></Icon>
+        <div>Loading</div>
+      </Spin>
+    </div>
 
   </div>
 </template>
 
 <script>
+  import Vue from 'vue'
   import SubItem from './submenu/SubItem'
   import AgriMap from './map/AgriMap'
   import LineExample from './charts/LineExample'
   import ChartInfo from './submenu/ChartInfo'
 
-  var marks = [[{
-    position: {
-      lat: 22.9764891,
-      lng: 120.5493562
-    },
-    infoText: '000000000501070b'
-  }, {
-    position: {
-      lat: 22.9764891,
-      lng: 120.5493162
-    },
-    infoText: '00000000050106e5'
-  }], [{
-    position: {
-      lat: 23.897406,
-      lng: 121.546638
-    },
-    infoText: 'Marker 4'
-  }, {
-    position: {
-      lat: 23.8990,
-      lng: 121.549738
-    },
-    infoText: 'Marker 5'
-  }], []]
+  const url2 = '/data/todos/bindlist'
+  var tmpdata = [[], []]
   var icons = []
   var icon1 = {url: 'static/img/ico_manhole_small.png'}
   for (var i = 0; i < 5; i++) {
@@ -85,6 +63,9 @@
       LineExample,
       ChartInfo
     },
+    mounted () {
+      this.getBindList()
+    },
     data () {
       return {
         items: [
@@ -95,19 +76,20 @@
             active: 2
           },
           {
-            title: '東華大學',
+            title: '區域1',
             isActive: false,
-            total: 2,
+            total: 0,
             active: 0
           },
           {
-            title: 'Zeon B',
+            title: '區域2',
             isActive: false,
             total: 0,
             active: 0
           }
         ],
-        markerList: marks[0],
+        marks: tmpdata,
+        markerList: tmpdata[0],
         iconList: icons,
         all: [],
         center: {
@@ -128,6 +110,23 @@
       }
     },
     methods: {
+      getBindList () {
+        Vue.axios.get(url2).then((response) => {
+          // console.log(typeof response + ' response : ' + JSON.stringify(response))
+          this.markerList = response.data
+          console.log(' this.marks : ' + JSON.stringify(this.marks))
+          console.log(' this.markerList : ' + JSON.stringify(this.markerList))
+          this.marks = []
+          this.marks.push(response.data)
+          for (var k in tmpdata) {
+            this.marks.push(tmpdata[k])
+          }
+          console.log(' this.marks : ' + JSON.stringify(this.marks))
+        })
+      },
+      insertArr (arr, index, item) {
+        return arr.splice(index, 0, item)
+      },
       onClick (index) {
         console.log('submemu item click : ' + index + ' , type : ' + typeof index)
         for (var i = 0; i < this.items.length; i++) {
@@ -137,12 +136,12 @@
             this.items[i].isActive = false
           }
         }
-        this.markerList = marks[index]
+        this.markerList = this.marks[index]
       },
       onClickAll () {
         console.log(' click All ')
         var all = []
-        all = all.concat(...marks)
+        all = all.concat(...this.marks)
         console.log('all : ' + this.all.length)
         this.markerList = all
       },

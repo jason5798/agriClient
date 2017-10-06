@@ -216,7 +216,7 @@
       updateChart (val) {
         console.log('test val : ' + JSON.stringify(val))
 
-        var url = queryPath + '?mac=' + val.mac + '&from=2017-09-27 00:00'
+        var url = queryPath + '?mac=' + val.mac// + '&from=2017-09-27 00:00'
 
         Vue.axios.get(url).then((response) => {
           var datas = response.data
@@ -248,18 +248,18 @@
             this.ec = null
           } else {
             var length = datas.time.length
-            this.phMax = (this.getMaxOfArray(datas.ph)).toFixed(2)
-            this.phMin = (this.getMinOfArray(datas.ph)).toFixed(2)
-            this.waterMax = (this.getMaxOfArray(datas.water)).toFixed(2)
-            this.waterMin = (this.getMinOfArray(datas.water)).toFixed(2)
-            this.tmpMax = (this.getMaxOfArray(datas.temprature)).toFixed(2)
-            this.tmpMin = (this.getMinOfArray(datas.temprature)).toFixed(2)
-            this.ecMax = (this.getMaxOfArray(datas.ec)).toFixed(2)
-            this.ecMin = (this.getMinOfArray(datas.ec)).toFixed(2)
-            this.tmp = (datas.temprature)[datas.temprature.length - 1].toFixed(2)
-            this.ph = (datas.ph)[datas.ph.length - 1].toFixed(2)
-            this.water = (datas.water)[datas.water.length - 1].toFixed(2)
-            this.ec = (datas.ec)[datas.ec.length - 1].toFixed(2)
+            this.phMax = this.getMaxOfArray(datas.ph)
+            this.phMin = this.getMinOfArray(datas.ph)
+            this.waterMax = this.getMaxOfArray(datas.water)
+            this.waterMin = this.getMinOfArray(datas.water)
+            this.tmpMax = this.getMaxOfArray(datas.temprature)
+            this.tmpMin = this.getMinOfArray(datas.temprature)
+            this.ecMax = this.getMaxOfArray(datas.ec)
+            this.ecMin = this.getMinOfArray(datas.ec)
+            this.tmp = (datas.temprature)[datas.temprature.length - 1]
+            this.ph = (datas.ph)[datas.ph.length - 1]
+            this.water = (datas.water)[datas.water.length - 1]
+            this.ec = (datas.ec)[datas.ec.length - 1]
             console.log('temprature max : ' + this.tmpMax + ' , min : ' + this.tmpMin)
             console.log('ph max : ' + this.phMax + ' , min : ' + this.phMin)
             console.log('water max : ' + this.waterMax + ' , min : ' + this.waterMin)

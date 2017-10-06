@@ -34,13 +34,13 @@
             active: 2
           },
           {
-            title: '東華大學',
+            title: '區域1',
             isActive: true,
             total: 2,
             active: 0
           },
           {
-            title: 'Zeon B',
+            title: '區域2',
             isActive: true,
             total: 0,
             active: 0

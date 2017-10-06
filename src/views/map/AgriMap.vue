@@ -94,7 +94,7 @@
     methods: {
       mouseover (marker, idx) {
         this.infoWindowPos = marker.position
-        this.infoContent = marker.infoText
+        this.infoContent = marker.macAddr
         // check if its the same marker that was selected if yes toggle
         if (this.currentMidx === idx) {
           this.infoWinOpen = !this.infoWinOpen
@@ -123,7 +123,7 @@
           this.iconArr[idx] = this.icon1
         }
         // console.log('toggleInfoChart after : currentMidx : ' + this.currentMidx + ' ,  idx :' + idx)
-        var device = {mac: marker.infoText, information: {temprature: 24.8, humidity: 58, ph: 9, con: 700}}
+        var device = {mac: marker.macAddr, information: {temprature: 24.8, humidity: 58, ph: 9, con: 700}}
         this.$emit('toggle-info', device)
       },
       closeInfo () {

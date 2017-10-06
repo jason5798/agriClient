@@ -10,7 +10,7 @@
         <a class="nav-link" href="#/devices">裝置</a>
       </li>
       <li class="nav-item px-3">
-        <a class="nav-link" href="#/accounts">帳號</a>
+        <a class="nav-link" href="#/find">查詢</a>
       </li>
       <li class="nav-item px-3">
         <a class="nav-link" href="#/zone">區域</a>

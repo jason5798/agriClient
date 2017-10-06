@@ -7,7 +7,7 @@ import Full from '@/containers/Full'
 // Views
 import Dashboard from '@/views/Dashboard'
 import Charts from '@/views/Charts'
-import Accounts from '@/views/Accounts'
+import Find from '@/views/Find'
 import Devices from '@/views/Devices'
 import Zone from '@/views/Zone'
 
@@ -64,9 +64,9 @@ export default new Router({
           component: Zone
         },
         {
-          path: 'accounts',
-          name: 'Accounts',
-          component: Accounts
+          path: 'find',
+          name: 'Find',
+          component: Find
         },
         {
           path: 'components',

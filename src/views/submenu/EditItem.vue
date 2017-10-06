@@ -43,12 +43,12 @@
     height: 108px;
     padding: 8px 11px;
   }
-  .menuedit-item .site-name {
+   .site-name {
     font-weight: 600;
     color: #ffffff;
     font-size: 19px;
   }
-  .menuedit-item .site-name span {
+  .site-name span {
     display: inline-block;
   }
   .menuedit-icon {

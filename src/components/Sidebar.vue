@@ -6,7 +6,7 @@
           <router-link :to="'/devices'" class="nav-link"><i class="icon-target"></i> Devices </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="'/accounts'" class="nav-link"><i class="icon-user"></i> Accounts </router-link>
+          <router-link :to="'/find'" class="nav-link"><i class="icon-search"></i> Find </router-link>
         </li>
         <li class="nav-item">
           <router-link :to="'/zone'" class="nav-link"><i class="icon-globe"></i> Zone </router-link>
