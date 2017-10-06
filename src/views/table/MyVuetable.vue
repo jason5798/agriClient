@@ -101,7 +101,7 @@
           var user = response.data
           this.user = user
         }).catch(function (error) {
-          console.log(error);
+          console.log(error)
         })
       },
       allcap (value) {

@@ -291,7 +291,7 @@
             }
           }
         }).catch(function (error) {
-          console.log(error);
+          console.log(error)
         })
       },
       getBindList () {
@@ -305,7 +305,7 @@
           console.log(typeof macs + ' data : ' + JSON.stringify(macs))
           this.maclist = macs
         }).catch(function (error) {
-          console.log(error);
+          console.log(error)
         })
       },
       showPlot () {
@@ -363,7 +363,7 @@
           }
           this.saveContent(data, filename)
         }).catch(function (error) {
-          console.log(error);
+          console.log(error)
         })
       },
       convertToCSV (objArray) {
