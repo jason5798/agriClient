@@ -326,6 +326,8 @@
           this.conData = dataCon
           console.log('child loading-finish')
           this.$emit('loading-finish')
+        }).catch(function (error) {
+          console.log(error);
         })
       },
       clickClose () {

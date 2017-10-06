@@ -290,6 +290,8 @@
               Plotly.redraw(this.$refs.water)
             }
           }
+        }).catch(function (error) {
+          console.log(error);
         })
       },
       getBindList () {
@@ -302,6 +304,8 @@
           }
           console.log(typeof macs + ' data : ' + JSON.stringify(macs))
           this.maclist = macs
+        }).catch(function (error) {
+          console.log(error);
         })
       },
       showPlot () {
@@ -358,6 +362,8 @@
             filename = this.info.from + '_' + this.info.to + '.csv'
           }
           this.saveContent(data, filename)
+        }).catch(function (error) {
+          console.log(error);
         })
       },
       convertToCSV (objArray) {

@@ -122,6 +122,8 @@
             this.marks.push(tmpdata[k])
           }
           console.log(' this.marks : ' + JSON.stringify(this.marks))
+        }).catch(function (error) {
+          console.log(error);
         })
       },
       insertArr (arr, index, item) {
