@@ -127,13 +127,14 @@
 </template>
 
 <script>
-  import Vue from 'vue'
+  // import Vue from 'vue'
   import Plotly from 'plotly.js/dist/plotly'
   import FieldDefs from './table/FieldDefs.js'
   import MyVuetable from './table/MyVuetable'
-
-  const url2 = '/data/todos/bindlist'
-  const url3 = '/data/todos/devices'
+  import {getDatas} from '../api/todos'
+  // Get API url
+  const url3 = process.env.BASE_API + 'todos/devices'
+  console.log('@@@@@@@@@@@@@ url3 ' + url3)
   var layout = {
     'title': '溫度',
     'xaxis': {
@@ -198,7 +199,7 @@
         ],
         moreParams: {},
         items: [],
-        url: '',
+        obj: '',
         alertTitle: '警告!',
         alertMessage: '尚未選擇裝置,無法查詢或更新.'
       }
@@ -239,9 +240,9 @@
 
         var toString = time.getFullYear() + '-' + a + '-' + b + ' 00:00'
         var fromString = time2.getFullYear() + '-' + a2 + '-' + b2 + ' 00:00'
-        this.url = '/data/todos/datas?mac=' + this.info.mac + '&from=' + fromString + '&to=' + toString
-        console.log('fetchData (chart) url  : ' + this.url)
-        Vue.axios.get(this.url).then((response) => {
+        // keep data for export CSV
+        this.obj = {mac: this.info.mac, from: fromString, to: toString}
+        getDatas(this.obj).then(response => {
           var data = response.data
           if (data !== null) {
             console.log('#### data length : ' + data.ph.length)
@@ -295,18 +296,15 @@
         })
       },
       getBindList () {
-        Vue.axios.get(url2).then((response) => {
-          console.log(typeof response + ' response : ' + JSON.stringify(response))
-          var lists = response.data
-          var macs = []
-          for (var k in lists) {
-            macs.push(lists[k].macAddr)
-          }
-          console.log(typeof macs + ' data : ' + JSON.stringify(macs))
-          this.maclist = macs
-        }).catch(function (error) {
-          console.log(error)
-        })
+        this.info.mac = this.$store.getters.selectMac
+        var lists = this.$store.getters.devicelist
+        console.log('@@@@@ lists : ' + JSON.stringify(this.$store.state))
+        var macs = []
+        for (var k in lists) {
+          macs.push(lists[k].macAddr)
+        }
+        console.log(typeof macs + ' data : ' + JSON.stringify(macs))
+        this.maclist = macs
       },
       showPlot () {
         this.isShowTable = false
@@ -339,11 +337,12 @@
           this.alertMessage = '尚無資料,無法匯出CSV.'
           this.warning()
         }
-        if (this.url === '') {
+        if (this.obj === '') {
           return
         }
-        var csvUrl = this.url + '&csv=true'
-        Vue.axios.get(csvUrl).then((response) => {
+        // var csvUrl = this.url + '&csv=true'
+        this.obj.csv = true
+        getDatas(this.obj).then(response => {
           var data = this.convertToCSV(response.data)
           // console.log('data : ' + JSON.stringify(data))
           console.log(typeof this.info.from + ' : ' + this.info.from)

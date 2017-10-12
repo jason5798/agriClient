@@ -1,6 +1,6 @@
 {
   "name": "agriClient",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "Agri sensor data admin",
   "author": "Jason Huang modify by CoreUI",
   "private": true,
@@ -23,7 +23,8 @@
     "vue-axios": "^2.0.2",
     "vue-chartjs": "2.6.3",
     "vue-router": "2.5.3",
-    "vue-strap": "github:wffranco/vue-strap"
+    "vue-strap": "github:wffranco/vue-strap",
+    "vuex": "^2.4.1"
   },
   "devDependencies": {
     "autoprefixer": "7.1.1",

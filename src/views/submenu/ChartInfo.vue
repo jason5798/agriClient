@@ -119,11 +119,10 @@
   </div>
 </template>
 <script>
-  import Vue from 'vue'
   import DailyIncome from '../charts/DailyIncome'
   import CardLine3ChartExample from '../dashboard/CardLine3ChartExample'
-  // var url = 'http://localhost:3000/todos/datas/'
-  var queryPath = '/data/todos/datas/'
+  import {getDatas} from '../../api/todos'
+
   const datasets = [
     {
       label: 'My First dataset',
@@ -215,12 +214,9 @@
       },
       updateChart (val) {
         console.log('test val : ' + JSON.stringify(val))
-
-        var url = queryPath + '?mac=' + val.mac// + '&from=2017-09-27 00:00'
-
-        Vue.axios.get(url).then((response) => {
+        getDatas({mac: val.mac}).then(response => {
           var datas = response.data
-          console.log('datas : ' + JSON.stringify(datas))
+          // console.log('datas : ' + JSON.stringify(datas))
 
           var time = []
           // console.log('*************** last')
@@ -260,10 +256,10 @@
             this.ph = (datas.ph)[datas.ph.length - 1]
             this.water = (datas.water)[datas.water.length - 1]
             this.ec = (datas.ec)[datas.ec.length - 1]
-            console.log('temprature max : ' + this.tmpMax + ' , min : ' + this.tmpMin)
+            /* console.log('temprature max : ' + this.tmpMax + ' , min : ' + this.tmpMin)
             console.log('ph max : ' + this.phMax + ' , min : ' + this.phMin)
             console.log('water max : ' + this.waterMax + ' , min : ' + this.waterMin)
-            console.log('ec max : ' + this.ecMax + ' , min : ' + this.ecMin)
+            console.log('ec max : ' + this.ecMax + ' , min : ' + this.ecMin) */
             for (var i = 0; i < length; i++) {
               if (i === 0) {
                 time.push('00:01')

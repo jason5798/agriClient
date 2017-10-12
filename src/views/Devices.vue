@@ -42,13 +42,12 @@
 </template>
 
 <script>
-  import Vue from 'vue'
   import SubItem from './submenu/SubItem'
   import AgriMap from './map/AgriMap'
   import LineExample from './charts/LineExample'
   import ChartInfo from './submenu/ChartInfo'
+  import {getMacList} from '../api/todos'
 
-  const url2 = '/data/todos/bindlist'
   var tmpdata = [[], []]
   var icons = []
   var icon1 = {url: 'static/img/ico_manhole_small.png'}
@@ -111,11 +110,11 @@
     },
     methods: {
       getBindList () {
-        Vue.axios.get(url2).then((response) => {
-          // console.log(typeof response + ' response : ' + JSON.stringify(response))
+        getMacList().then(response => {
+          this.$store.dispatch('setDeviceList', response.data)
           this.markerList = response.data
-          console.log(' this.marks : ' + JSON.stringify(this.marks))
-          console.log(' this.markerList : ' + JSON.stringify(this.markerList))
+          // console.log(' this.marks : ' + JSON.stringify(this.marks))
+          // console.log(' this.markerList : ' + JSON.stringify(this.markerList))
           this.marks = []
           this.marks.push(response.data)
           for (var k in tmpdata) {
@@ -123,7 +122,7 @@
           }
           console.log(' this.marks : ' + JSON.stringify(this.marks))
         }).catch(function (error) {
-          console.log(error)
+          console.log('?????? error :' + error)
         })
       },
       insertArr (arr, index, item) {
@@ -163,6 +162,7 @@
         if (data) {
           console.log('parent toggle-info : ' + JSON.stringify(data))
           this.toggleData = data // set propo for chart info
+          this.$store.dispatch('setSelectMac', data.mac)
           // this.isOverLoading = true // Show loading indicator
         }
       },
