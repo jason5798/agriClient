@@ -1,6 +1,6 @@
 <template>
   <footer class="app-footer">
-    <a href="http://www.gemtek.com.tw">Ｇemtek</a> &copy; 2017 coptright.
+    <a href="http://www.gemtek.com.tw">Ｇemtek</a> &copy; 2017 copyright.
     <span class="float-right">Powered by <a href="http://www.gemtek.com.tw/">Ｇemtek</a></span>
   </footer>
 </template>

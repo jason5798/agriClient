@@ -3,13 +3,18 @@
     <nav class="sidebar-nav">
       <ul class="nav">
         <li class="nav-item">
-          <router-link :to="'/devices'" class="nav-link"><i class="icon-target"></i> Devices </router-link>
+          <router-link :to="'/devices'" class="nav-link"><i class="icon-target"></i> 裝置 </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="'/find'" class="nav-link"><i class="icon-search"></i> Find </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="'/zone'" class="nav-link"><i class="icon-globe"></i> Zone </router-link>
+          <router-link :to="'/zone'" class="nav-link"><i class="icon-globe"></i> 查詢 </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link :to="'/zone'" class="nav-link"><i class="icon-globe"></i> 區域 </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link :to="'/profiles'" class="nav-link"><i class="icon-edit"></i> 設定 </router-link>
         </li>
         <li class="nav-title">
           UI Elements

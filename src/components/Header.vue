@@ -15,6 +15,9 @@
       <li class="nav-item px-3">
         <a class="nav-link" href="#/zone">區域</a>
       </li>
+      <li class="nav-item px-3">
+        <a class="nav-link" href="#/profiles">通知設定</a>
+      </li>
     </ul>
     <ul class="nav navbar-nav ml-auto">
       <li class="nav-item d-md-down-none">

@@ -46,7 +46,6 @@
   import AgriMap from './map/AgriMap'
   import LineExample from './charts/LineExample'
   import ChartInfo from './submenu/ChartInfo'
-  import {getMacList} from '../api/todos'
 
   var tmpdata = [[], []]
   var icons = []
@@ -63,7 +62,7 @@
       ChartInfo
     },
     mounted () {
-      this.getBindList()
+      this.init()
     },
     data () {
       return {
@@ -109,9 +108,8 @@
       }
     },
     methods: {
-      getBindList () {
-        getMacList().then(response => {
-          this.$store.dispatch('setDeviceList', response.data)
+      init () {
+        this.$store.dispatch('getDeviceList').then(response => {
           this.markerList = response.data
           // console.log(' this.marks : ' + JSON.stringify(this.marks))
           // console.log(' this.markerList : ' + JSON.stringify(this.markerList))
@@ -122,8 +120,10 @@
           }
           console.log(' this.marks : ' + JSON.stringify(this.marks))
         }).catch(function (error) {
-          console.log('?????? error :' + error)
+          console.log('?????? getMacList  error :' + error)
         })
+        this.$store.dispatch('getDeviceType')
+        this.$store.dispatch('getProfiles')
       },
       insertArr (arr, index, item) {
         return arr.splice(index, 0, item)

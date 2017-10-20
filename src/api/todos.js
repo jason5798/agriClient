@@ -40,3 +40,10 @@ export function getDevices (obj) {
     method: 'get'
   })
 }
+
+export function getDeviceTypes () {
+  return fetch({
+    url: 'todos/deviceMaps',
+    method: 'get'
+  })
+}

@@ -45,7 +45,7 @@
                 <DatePicker type="date" placeholder="選擇結束日期" format="yyyy-MM-dd" v-model="info.to" @on-change="toChange" style="width: 100%"></DatePicker>
               </div>
               <button type="button" class="btn btn-primary btn-block" @click="toLoadData">
-                <i v-show="isShowLoading" class='fa fa-spinner fa-spin '></i>查詢
+                <i v-show="isShowLoading" class='fa fa-spinner fa-spin '></i><h5>查詢</h5>
               </button>
             </form>
             </div>
@@ -134,7 +134,7 @@
   import {getDatas} from '../api/todos'
   // Get API url
   const url3 = process.env.BASE_API + 'todos/devices'
-  console.log('@@@@@@@@@@@@@ url3 ' + url3)
+  // console.log('url3 ' + url3)
   var layout = {
     'title': '溫度',
     'xaxis': {
@@ -297,7 +297,7 @@
       },
       getBindList () {
         this.info.mac = this.$store.getters.selectMac
-        var lists = this.$store.getters.devicelist
+        var lists = this.$store.getters.deviceList
         console.log('@@@@@ lists : ' + JSON.stringify(this.$store.state))
         var macs = []
         for (var k in lists) {
