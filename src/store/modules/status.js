@@ -10,11 +10,12 @@ const status = {
     },
     SET_IS_ADD_PROFILE: (state, status) => {
       state.isAddProfile = status
-      console.log('$$$$$ store state.isAddProfile : ' + state.isAddProfile)
+      console.log('$ store SET_IS_ADD_PROFILE : ' + state.isAddProfile)
     }
   },
   actions: {
-    setIsLoading: ({commit}, srtatus) => {
+    setIsLoading: ({commit}, status) => {
+      console.log('$ store setIsLoading : ' + status)
       commit('SET_IS_LOADING', status)
     },
     setIsAddProfile: ({commit}, status) => {

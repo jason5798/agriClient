@@ -12,7 +12,7 @@ const profile = {
     },
     ADD_PROFILE: (state, profile) => {
       console.log('$ store before  ADD_PROFILEstate.profileList : ' + state.profileList.length)
-      state.profileList.push(profile)
+      state.profileList.push(JSON.parse(JSON.stringify(profile)))
       console.log('$ store after ADD_PROFILE state.profileList : ' + state.profileList.length)
     },
     DELETE_PROFILE: (state, name) => {
@@ -24,7 +24,7 @@ const profile = {
     UPDATE_PROFILE: (state, profile) => {
       var updateIndex = findIndex(state.profileList, profile.name)
       console.log('$$$$$ store UPDATE_PROFILE  index : ' + updateIndex)
-      state.profileList[updateIndex] = profile
+      state.profileList[updateIndex] = JSON.parse(JSON.stringify(profile))
     },
     SET_SELECT_PROFILE: (state, profile) => {
       // Jason modify for avoid original profile be changed
@@ -32,8 +32,8 @@ const profile = {
       console.log('$ store  state.selectProfile : ' + state.selectProfile.name)
     },
     SET_NEW_PROFILE: (state, profile) => {
-      state.selectProfile = profile
-      console.log('$$$$$ store  state.selectProfile : ' + state.selectProfile.name)
+      state.selectProfile = JSON.parse(JSON.stringify(profile))
+      console.log('$ store  SET_NEW_PROFILE : ' + state.selectProfile.name)
     }
   },
   actions: {
@@ -46,10 +46,10 @@ const profile = {
       commit('ADD_PROFILE', profile)
       return new Promise((resolve, reject) => {
         toAddProfile(profile).then(response => {
+          commit('SET_IS_LOADING', false)
           if (response.data.result.localeCompare('ok') === 0) {
             // Jason mark delete finish to show alert
             console.log('**** toAddProfile to DB is success!')
-            commit('SET_IS_LOADING', false)
           } else {
             console.log('????  toAddProfile to DB is fail!')
           }
@@ -60,7 +60,7 @@ const profile = {
       })
     },
     deleteProfile: ({ commit }, name) => {
-      console.log('$$$$$ store  deleteProfile receive name : ' + name)
+      console.log('$ store  deleteProfile receive name : ' + name)
       commit('SET_IS_LOADING', true)
       commit('DELETE_PROFILE', name)
       return new Promise((resolve, reject) => {
@@ -78,7 +78,8 @@ const profile = {
       })
     },
     updateProfile: ({ commit }, profile) => {
-      console.log('$$$$$ store  updateProfile receive profile name : ' + profile.name)
+      console.log('$store  updateProfile receive profile name : ' + JSON.stringify(profile))
+      // console.log('$store  updateProfile receive profile name : ' + profile.name)
       commit('SET_IS_LOADING', true)
       commit('UPDATE_PROFILE', profile)
       return new Promise((resolve, reject) => {
@@ -102,11 +103,7 @@ const profile = {
       return new Promise((resolve, reject) => {
         getProfileList().then(response => {
           var lists = response.data
-          console.log('$ getProfileList :  ' + lists.length)
           commit('SET_PROFILE_LIST', lists)
-          if (lists.length > 0) {
-            commit('SET_SELECT_PROFILE', lists[0])
-          }
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -117,7 +114,7 @@ const profile = {
 }
 
 function findIndex (lists, name) {
-  console.log('$$$$$ store  DELETE_PROFILE receive  name : ' + name)
+  console.log('$ store  findIndex()  receive  name : ' + name)
   var mIndex = 0
   for (var b = 0; b < lists.length; b++) {
     console.log('$$$$$ store  profileListlist [ ' + b + ' ]name : ' + lists[b].name)

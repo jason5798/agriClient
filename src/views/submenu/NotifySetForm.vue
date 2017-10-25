@@ -37,7 +37,7 @@
               <label >
                 <h5>選擇通知設定</h5>
               </label>
-              <select class="form-control" @change="selectProfileVal">
+              <select v-model="selectProfile.name" class="form-control" @change="selectProfileVal">
                 <option disabled value="">請選擇通知設定</option>
                 <option v-for="profile in profileList">{{profile.name}}</option>
               </select>
@@ -82,32 +82,6 @@
         'isAddProfile',
         'profileList'
       ])
-    },
-    watch: {
-      /* Jason add for fix remove profile issue
-       * 1.Older setting still exist issue
-       * 2.Select profile name is empty
-       */
-      profileList (val) {
-        console.log('########  Watch : profileList val : ' + val.length + ' <==>  this.profileCount : ' + this.profileCount)
-        if (this.profileCount > val.length && val.length !== 0) {
-          // this.onAddMode()
-          console.log('* Child reduce-profile')
-          this.$emit('reduce-profile')
-        } else if (val.length === 0 || this.profileCount > val.length) {
-          this.onAddMode()
-        }
-        this.profileCount = val.length
-      },
-      selectProfile (val) {
-        console.log('########  Watch : selectProfile : ' + JSON.stringify(val))
-      }
-    },
-    mounted () {
-      this.profileCount = this.$store.getters.profileList.length
-      if (this.profileCount === 0) {
-        this.$store.dispatch('setIsAddProfile', true)
-      }
     },
     data () {
       return {

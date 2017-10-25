@@ -42,10 +42,10 @@ export function getProfileList () {
 
 export function getProfileByType (type) {
   if (type) {
-    console.log('$$$$ setSelectProfileByType is exist => getNewProfile(type)')
+    console.log('$ getProfileByType : type  is exist => getNewProfile(type)')
     return getNewProfile(type)
   } else {
-    console.log('$$$$ setSelectProfileByType is not exist => getTmpProfile()')
+    console.log('$  getProfileByType  : type  is not exist => getTmpProfile()')
     return getTmpProfile()
   }
 }
