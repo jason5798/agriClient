@@ -94,7 +94,7 @@
     methods: {
       mouseover (marker, idx) {
         this.infoWindowPos = marker.position
-        this.infoContent = marker.macAddr
+        this.infoContent = marker.name + ' : ' + marker.macAddr
         // check if its the same marker that was selected if yes toggle
         if (this.currentMidx === idx) {
           this.infoWinOpen = !this.infoWinOpen

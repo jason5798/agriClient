@@ -34,10 +34,10 @@
             active: 2
           },
           {
-            title: '區域1',
+            title: '東華',
             isActive: true,
             total: 2,
-            active: 0
+            active: 2
           },
           {
             title: '區域2',

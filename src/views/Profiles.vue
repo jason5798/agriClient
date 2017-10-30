@@ -37,13 +37,13 @@
         firstDevice: '請選擇裝置',
         firstProfile: '請選擇通知設定',
         newProfile: {},
-        titleData: ['名稱', '最大值', '最大值提示', '最小值', '最小值提示']
+        titleData: ['名稱', '最大值', '超過最大值提示', '最小值', '低於最小值提示']
       }
     },
     methods: {
       initData () {
         var typeList = this.$store.getters.typeList
-        var deviceList = this.$store.getters.deviceList
+        var deviceList = this.$store.getters.bindDeviceList
         var profileList = this.$store.getters.profileList
         console.log('profile page typeList :  ' + JSON.stringify(typeList))
         console.log('profile page profileList :  ' + JSON.stringify(profileList))
@@ -77,10 +77,10 @@
         }
         console.log(' deviceList : ' + JSON.stringify(deviceList))
         if (deviceList.length === 0) {
-          this.$store.dispatch('getDeviceList').then(response => {
-            console.log('$ deviceList is empty getDeviceList : ' + JSON.stringify(response.data.length))
+          this.$store.dispatch('getBindDeviceList').then(response => {
+            console.log('$ deviceList is empty getBindDeviceList : ' + JSON.stringify(response.data.length))
           }).catch(function (error) {
-            console.log('? getDeviceList  error :' + error)
+            console.log('? getBindDeviceList  error :' + error)
           })
         }
       },

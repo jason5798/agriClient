@@ -69,7 +69,7 @@
         <div class="col-md-4">
           酸鹼值
           <h5>
-            {{ph}}mol/l
+            {{ph}}
           </h5>
           <div class="row">
             <div class="col-md-6">
@@ -93,7 +93,7 @@
           <h5>
             {{ec}}
           </h5>
-          μS／cm
+          ms／cm
           <div class="row">
             <div class="col-md-6">
               <i class="fa fa-arrow-circle-up fa-lg block-icon-1"></i>

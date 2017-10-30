@@ -29,7 +29,7 @@ const profile = {
     SET_SELECT_PROFILE: (state, profile) => {
       // Jason modify for avoid original profile be changed
       state.selectProfile = JSON.parse(JSON.stringify(profile))
-      console.log('$ store  state.selectProfile : ' + state.selectProfile.name)
+      console.log('$ store  state.selectProfile : ' + profile.name)
     },
     SET_NEW_PROFILE: (state, profile) => {
       state.selectProfile = JSON.parse(JSON.stringify(profile))

@@ -15,9 +15,11 @@
       <li class="nav-item px-3">
         <a class="nav-link" href="#/zone">區域</a>
       </li>
-      <li class="nav-item px-3">
-        <a class="nav-link" href="#/profiles">通知設定</a>
-      </li>
+      <dropdown text="設定" class="nav-item px-3">
+        <div class="dropdown-header text-center"><strong>所有設定</strong></div>
+        <li><a class="dropdown-item" href="#/device-settings"><i class="fa fa-map-marker"></i> 裝置設定</a></li>
+        <li><a class="dropdown-item" href="#/profiles"><i class="fa fa-bell-o"></i> 通知設定</a></li>
+      </dropdown>
     </ul>
     <ul class="nav navbar-nav ml-auto">
       <li class="nav-item d-md-down-none">
@@ -44,8 +46,8 @@
           <a class="dropdown-item" href="#"><i class="fa fa-file"></i> Projects<span class="badge badge-primary">42</span></a>
           <div class="divider"></div>
           <a class="dropdown-item" href="#"><i class="fa fa-shield"></i> Lock Account</a>
-          <a class="dropdown-item" href="#"><i class="fa fa-lock"></i> Logout</a>
-        </div>-->
+          <a class="dropdown-item" href="#"><i class="fa fa-lock"></i> Logout</a>-->
+        </div>
       </dropdown>
       <!--<li class="nav-item d-md-down-none">
         <a class="nav-link navbar-toggler aside-menu-toggler" href="#" @click="asideToggle">&#9776;</a>

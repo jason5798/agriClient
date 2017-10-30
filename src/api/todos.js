@@ -1,6 +1,6 @@
 import fetch from '../utils/fetch'
 
-export function getMacList () {
+export function getBindList () {
   return fetch({
     url: 'todos/bindlist',
     method: 'get'
@@ -45,5 +45,38 @@ export function getDeviceTypes () {
   return fetch({
     url: 'todos/deviceMaps',
     method: 'get'
+  })
+}
+
+export function toAddBindDevice (device) {
+  const data = {
+    device
+  }
+  return fetch({
+    url: '/todos/bindlist',
+    method: 'post',
+    data
+  })
+}
+
+export function toUpdateBindDevice (device) {
+  const data = {
+    device
+  }
+  return fetch({
+    url: '/todos/bindlist',
+    method: 'put',
+    data
+  })
+}
+
+export function toDelBindDevice (name) {
+  const data = {
+    name
+  }
+  return fetch({
+    url: '/todos/bindlist',
+    method: 'delete',
+    data
   })
 }

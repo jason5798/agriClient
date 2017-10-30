@@ -10,6 +10,9 @@ const getters = {
   profileList: state => state.profile.profileList,
   selectProfile: state => state.profile.selectProfile,
   isLoading: state => state.status.isLoading,
-  isAddProfile: state => state.status.isAddProfile
+  isAddProfile: state => state.status.isAddProfile,
+  isAddDevice: state => state.status.isAddDevice,
+  selectBindDevice: state => state.device.selectBindDevice,
+  bindDeviceList: state => state.device.bindDeviceList
 }
 export default getters

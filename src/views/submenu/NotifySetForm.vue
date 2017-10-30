@@ -3,7 +3,7 @@
     <div class="card-header">
       <div class="row">
         <div class="col-md-8">
-          <h5><i class="fa fa-pencil-square-o"></i>通知設定</h5>
+          <h5><i class="fa fa-bell-o"></i>  異常通知設定</h5>
         </div>
         <div class="col-md-4">
           <a v-show="!isAddProfile" @click="onAddMode"><img class="btn-add m-l21"  src="static/img/btn_add_n.png"/></a>
@@ -14,18 +14,8 @@
     <div class="card-block">
       <div>
         <form role="form">
-          <div class="form-group">
-            <label >
-              <h5>選擇裝置類型</h5>
-            </label>
-            <select  v-model = "selectTypeName" class="form-control" @change="selectTypeVal">
-              <option disabled value="">請選擇裝置</option>
-              <option v-for="type in typeList">{{type.typeName}}</option>
-            </select>
-          </div>
           <div v-if="isAddProfile">
             <div class="form-group">
-
               <label >
                 <h5>新增通知設定名稱</h5>
               </label>
@@ -42,6 +32,15 @@
                 <option v-for="profile in profileList">{{profile.name}}</option>
               </select>
             </div>
+          </div>
+          <div class="form-group">
+            <label >
+              <h5>選擇裝置類型</h5>
+            </label>
+            <select  v-model = "selectTypeName" class="form-control" @change="selectTypeVal">
+              <option disabled value="">請選擇裝置</option>
+              <option v-for="type in typeList">{{type.typeName}}</option>
+            </select>
           </div>
           <button v-show="isAddProfile" type="button" class="btn btn-primary btn-block" @click="onNew">
             <i v-if="isLoading" class='fa fa-spinner fa-spin '></i>

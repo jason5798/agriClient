@@ -23,10 +23,9 @@
                 <label for="exampleInputEmail1">
                   <h5>選擇裝置</h5>
                 </label>
-                <select v-model="info.mac" class="form-control">
+                <select v-model="info.name" class="form-control" @change="selectDeviceOption">
                   <option disabled value="">請選擇裝置</option>
-                  <option v-for="mac in maclist">{{mac}}</option>
-
+                  <option v-for="device in bindDeviceList">{{device.name}}</option>
                 </select>
               </div>
 
@@ -87,9 +86,9 @@
               </div>
               <div class="col-md-8">
                 <div class="row">
-                  <div class="col-md-4">裝置 :{{info.mac}}</div>
-                  <div class="col-md-4">開始日期 :{{info.from}}</div>
-                  <div class="col-md-4">結束日期 :{{info.to}}</div>
+                  <div class="col-md-4">裝置 :{{info.name}}</div>
+                  <!--<div class="col-md-4">開始日期 :{{info.from}}</div>
+                  <div class="col-md-4">結束日期 :{{info.to}}</div>-->
                 </div>
               </div>
 
@@ -127,7 +126,7 @@
 </template>
 
 <script>
-  // import Vue from 'vue'
+  import { mapGetters } from 'vuex'
   import Plotly from 'plotly.js/dist/plotly'
   import FieldDefs from './table/FieldDefs.js'
   import MyVuetable from './table/MyVuetable'
@@ -164,6 +163,11 @@
     components: {
       MyVuetable
     },
+    computed: {
+      ...mapGetters([
+        'bindDeviceList'
+      ])
+    },
     mounted () {
       this.getBindList()
       this.initDate()
@@ -186,6 +190,7 @@
         api_url: url3,
         fields: FieldDefs,
         info: {
+          name: '',
           mac: '',
           from: '',
           to: ''
@@ -244,7 +249,8 @@
         this.obj = {mac: this.info.mac, from: fromString, to: toString}
         getDatas(this.obj).then(response => {
           var data = response.data
-          if (data !== null) {
+          var keys = Object.keys(data)
+          if (keys.length > 0) {
             console.log('#### data length : ' + data.ph.length)
             this.plotdata = [
               // {x: data.time, y: data.ec, name: '電導度'},
@@ -288,23 +294,33 @@
               Plotly.redraw(this.$refs.water)
               this.$refs.ec.title = '電導度'
               this.$refs.ec.data = [{x: data.time, y: data.ec, name: '電導度'}]
-              Plotly.redraw(this.$refs.water)
+              Plotly.redraw(this.$refs.ec)
             }
+          } else {
+            this.$refs.temp.data = [{x: [new Date()], y: [0], name: '溫度'}]
+            Plotly.redraw(this.$refs.temp)
+            this.$refs.ph.data = [{x: [new Date()], y: [0], name: '酸鹼度'}]
+            Plotly.redraw(this.$refs.ph)
+            this.$refs.water.data = [{x: [new Date()], y: [0], name: '水含量'}]
+            Plotly.redraw(this.$refs.water)
+            this.$refs.ec.data = [{x: [new Date()], y: [0], name: '電導度'}]
+            Plotly.redraw(this.$refs.ec)
           }
         }).catch(function (error) {
           console.log(error)
         })
       },
       getBindList () {
-        this.info.mac = this.$store.getters.selectMac
-        var lists = this.$store.getters.deviceList
-        console.log('@@@@@ lists : ' + JSON.stringify(this.$store.state))
-        var macs = []
+        var mac = this.$store.getters.selectMac
+        var lists = this.$store.getters.bindDeviceList
+        console.log('$ this.$store.getters.bindDeviceList : ' + JSON.stringify(lists))
         for (var k in lists) {
-          macs.push(lists[k].macAddr)
+          if (lists[k].macAddr === mac) {
+            this.info.name = lists[k].name
+            this.info.mac = lists[k].macAddr
+          }
         }
-        console.log(typeof macs + ' data : ' + JSON.stringify(macs))
-        this.maclist = macs
+        console.log('* Info : ' + JSON.stringify(this.info))
       },
       showPlot () {
         this.isShowTable = false
@@ -313,6 +329,20 @@
       showTable () {
         this.isShowTable = true
         this.isShowLine = false
+      },
+      selectDeviceOption (ele) {
+        var name = ele.target.value
+        console.log('$ Find sselectDeviceVal :' + name)
+        var deviceList = this.$store.getters.bindDeviceList
+        console.log('$$$ selectDeviceVal deviceList :' + JSON.stringify(deviceList))
+        for (var a = 0; a < deviceList.length; a++) {
+          console.log('####  deviceList[' + a + ']: ' + JSON.stringify(deviceList[a]) + 'select name : ' + name)
+          if (deviceList[a].name === name) {
+            console.log('$$$$ deviceList[' + a + '].typeName === this.deviceName')
+            this.info.mac = deviceList[a].macAddr
+          }
+        }
+        console.log('$ Current info :' + JSON.stringify(this.info))
       },
       toLoadData () {
         if (this.info.mac === '') {

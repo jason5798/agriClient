@@ -1,6 +1,6 @@
 {
   "name": "agriClient",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Agri sensor data admin",
   "author": "Jason Huang modify by CoreUI",
   "private": true,

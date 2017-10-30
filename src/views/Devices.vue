@@ -47,7 +47,7 @@
   import LineExample from './charts/LineExample'
   import ChartInfo from './submenu/ChartInfo'
 
-  var tmpdata = [[], []]
+  var tmpdata = []
   var icons = []
   var icon1 = {url: 'static/img/ico_manhole_small.png'}
   for (var i = 0; i < 5; i++) {
@@ -74,10 +74,10 @@
             active: 2
           },
           {
-            title: '區域1',
+            title: '東華',
             isActive: false,
-            total: 0,
-            active: 0
+            total: 2,
+            active: 2
           },
           {
             title: '區域2',
@@ -109,21 +109,32 @@
     },
     methods: {
       init () {
-        this.$store.dispatch('getDeviceList').then(response => {
+        this.$store.dispatch('getBindDeviceList').then(response => {
           this.markerList = response.data
           // console.log(' this.marks : ' + JSON.stringify(this.marks))
           // console.log(' this.markerList : ' + JSON.stringify(this.markerList))
-          this.marks = []
-          this.marks.push(response.data)
-          for (var k in tmpdata) {
-            this.marks.push(tmpdata[k])
+          this.marks = [[], [], []]
+          for (var j in this.markerList) {
+            if ((this.markerList[j].name).includes('土壤')) {
+              this.marks[1].push(this.markerList[j])
+            } else {
+              this.marks[0].push(this.markerList[j])
+            }
           }
           console.log(' this.marks : ' + JSON.stringify(this.marks))
         }).catch(function (error) {
-          console.log('?????? getMacList  error :' + error)
+          console.log('? getBindDeviceList  error :' + error)
         })
-        this.$store.dispatch('getDeviceType')
-        this.$store.dispatch('getProfiles')
+        this.$store.dispatch('getDeviceType').then(response => {
+          console.log('$ getDeviceType : ' + JSON.stringify(response.data))
+        }).catch(function (error) {
+          console.log('? getDeviceType  error :' + error)
+        })
+        this.$store.dispatch('getProfiles').then(response => {
+          console.log('$ getProfiles : ' + JSON.stringify(response.data))
+        }).catch(function (error) {
+          console.log('? getProfiles  error :' + error)
+        })
       },
       insertArr (arr, index, item) {
         return arr.splice(index, 0, item)

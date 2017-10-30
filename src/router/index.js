@@ -11,6 +11,7 @@ import Find from '@/views/Find'
 import Devices from '@/views/Devices'
 import Zone from '@/views/Zone'
 import Profiles from '@/views/Profiles'
+import DeviceSetting from '@/views/DeviceSetting'
 
 // Views - Components
 import Buttons from '@/views/components/Buttons'
@@ -73,6 +74,11 @@ export default new Router({
           path: 'profiles',
           name: 'Profiles',
           component: Profiles
+        },
+        {
+          path: 'device-settings',
+          name: 'DeviceSetting',
+          component: DeviceSetting
         },
         {
           path: 'components',
