@@ -13,7 +13,7 @@ const app = {
       // console.log('$$$$$ store state.selectMac : ' + state.selectMac)
     },
     GET_BIND_LIST: (state, lists) => {
-      console.log('$$$$$ GET_BIND_LIST : ' + JSON.stringify(lists))
+      console.log('$ GET_BIND_LIST : ' + lists.length)
       state.bindDeviceList = lists
     },
     SET_SELECT_DEVICE: (state, device) => {
@@ -43,7 +43,7 @@ const app = {
     getBindDeviceList: ({commit}) => {
       return new Promise((resolve, reject) => {
         getBindList().then(response => {
-          console.log('$ store : getBindList : ' + JSON.stringify(response.data))
+          console.log('$ store : getBindList : ' + response.data.length)
           commit('GET_BIND_LIST', response.data)
           resolve(response)
         }).catch(error => {

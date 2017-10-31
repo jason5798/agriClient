@@ -34,14 +34,14 @@
                 <label for="exampleInputEmail1">
                   <h5>開始日期</h5>
                 </label>
-                <DatePicker type="date" placeholder="選擇開始日期" format="yyyy-MM-dd" v-model="info.from" @on-change="fromChange" style="width: 100%"></DatePicker>
+                <DatePicker type="date" placeholder="選擇開始日期時間" format="yyyy-MM-dd HH:mm" :value="info.from" @on-change="fromChange" style="width: 100%"></DatePicker>
               </div>
               <div class="form-group">
 
                 <label for="exampleInputPassword1">
                   <h5>結束日期</h5>
                 </label>
-                <DatePicker type="date" placeholder="選擇結束日期" format="yyyy-MM-dd" v-model="info.to" @on-change="toChange" style="width: 100%"></DatePicker>
+                <DatePicker type="date" placeholder="選擇結束日期時間" format="yyyy-MM-dd HH:mm" :value="info.to" @on-change="toChange" style="width: 100%"></DatePicker>
               </div>
               <button type="button" class="btn btn-primary btn-block" @click="toLoadData">
                 <i v-show="isShowLoading" class='fa fa-spinner fa-spin '></i><h5>查詢</h5>
@@ -87,8 +87,8 @@
               <div class="col-md-8">
                 <div class="row">
                   <div class="col-md-4">裝置 :{{info.name}}</div>
-                  <!--<div class="col-md-4">開始日期 :{{info.from}}</div>
-                  <div class="col-md-4">結束日期 :{{info.to}}</div>-->
+                  <div class="col-md-4">開始日期 :{{info.from}}</div>
+                  <div class="col-md-4">結束日期 :{{info.to}}</div>
                 </div>
               </div>
 
@@ -211,13 +211,23 @@
     },
     methods: {
       initDate () {
+        // Verify bind device list
+        var deviceList = this.$store.getters.bindDeviceList
+        if (deviceList.length === 0) {
+          this.$store.dispatch('getBindDeviceList').then(response => {
+            console.log('$ deviceList is empty getBindDeviceList : ' + JSON.stringify(response.data.length))
+          }).catch(function (error) {
+            console.log('? getBindDeviceList  error :' + error)
+          })
+        }
+        // Set default search date
         let now = new Date()
         let oneWeekAgo = new Date()
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
         this.info.to = this.getDateString(now)
         this.info.from = this.getDateString(oneWeekAgo)
-        console.log(typeof this.info.from + ' : ' + this.info.from)
-        console.log(typeof this.info.to + ' : ' + this.info.to)
+        // console.log(typeof this.info.from + ' : ' + this.info.from)
+        // console.log(typeof this.info.to + ' : ' + this.info.to)
       },
       fetchData () {
         console.log('fetchData mac : ' + this.info.mac + ',  from : ' + this.info.from + ' , to : ' + this.info.to)
@@ -420,7 +430,7 @@
           }
           str += line2 + '\r\n'
         }
-        console.log(' str :' + str)
+        // console.log(' str :' + str)
         str = encodeURIComponent(str)
         return str
       },
@@ -435,6 +445,7 @@
       },
       saveContent (fileContents, fileName) {
         var link = document.createElement('a')
+        console.log('$ fileMame : ' + fileName)
         link.download = fileName
         link.href = 'data:text/csv;charset=utf-8,\ufeff' + fileContents
         link.click()
@@ -482,7 +493,7 @@
         if (d < 10) {
           d = '0' + d
         }
-        return date.getFullYear() + '-' + m + '-' + d
+        return date.getFullYear() + '-' + m + '-' + d + ' 00:00'
       }
     }
   }
