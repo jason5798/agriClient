@@ -56,7 +56,7 @@ function getNewProfile (type) {
   console.log('*** Object.keys(type.fieldName) : ' + JSON.stringify(Object.keys(type.fieldName)))
   Object.keys(type.fieldName).forEach(function (content) {
     for (var i = 0; i < 4; i++) {
-      setting[content] = {name: (type.fieldName)[content], max: '', maxInfo: '', min: '', mainInfo: ''}
+      setting[content] = {name: (type.fieldName)[content], max: '', maxInfo: '', min: '', minInfo: ''}
     }
   })
   profile.setting = setting
@@ -71,7 +71,7 @@ function getTmpProfile () {
   var type = {fieldName: {temperature: '溫度', ph: '酸鹼度', water: '水含量', ec: '電導'}}
   Object.keys(type.fieldName).forEach(function (content) {
     for (var i = 0; i < 4; i++) {
-      setting[content] = {name: (type.fieldName)[content], max: '', maxInfo: '', min: '', mainInfo: ''}
+      setting[content] = {name: (type.fieldName)[content], max: '', maxInfo: '', min: '', minInfo: ''}
     }
   })
   profile.setting = setting

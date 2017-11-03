@@ -23,7 +23,14 @@
     </ul>
     <ul class="nav navbar-nav ml-auto">
       <li class="nav-item d-md-down-none">
-        <a class="nav-link" href="#"><i class="icon-bell"></i><span class="badge badge-pill badge-danger"></span></a>
+        <a class="nav-link" href="#">
+          <i class="icon-bell" ></i>
+          <div  style="width:30px;height:20px;background-color:#ff9933;border-radius:50%;">
+            <span id="notifyCount">10</span>
+          </div>
+
+        </a>
+
       </li>
       <dropdown size="nav" class="nav-item">
         <span slot="button">
@@ -60,6 +67,21 @@
   import navbar from './Navbar'
   import { dropdown } from 'vue-strap'
   document.body.classList.toggle('sidebar-hidden')
+  var notifyCount = 0
+
+  var ws = new WebSocket('ws://localhost:3000/ws/notify')
+  ws.onmessage = function (m) {
+    console.log('< from-node-red:', m.data)
+    if (typeof m.data === 'string' && m.data !== null) {
+      var msg = JSON.parse(m.data)
+      console.log('from-node-red : id:' + msg.id)
+      if (msg.id === 'event_notity') {
+        console.log('msg.v : ' + JSON.stringify(msg.v))
+        notifyCount = notifyCount + 1
+        console.log('notifyCount : ' + notifyCount)
+      }
+    }
+  }
 
   export default {
     name: 'header',

@@ -266,13 +266,13 @@
               // {x: data.time, y: data.ec, name: '電導度'},
               // {x: data.time, y: data.ph, name: '酸鹼度'},
               // {x: data.time, y: data.water, name: '水含量'},
-              {x: data.time, y: data.temprature, name: '溫度'}]
+              {x: data.time, y: data.temperature, name: '溫度'}]
 
             if (this.isPlotExist === false) {
               console.log('this.isPlotExist === false')
               Plotly.newPlot(
                 this.$refs.temp,
-                [{x: data.time, y: data.temprature, name: '溫度'}],
+                [{x: data.time, y: data.temperature, name: '溫度'}],
                 layout
               )
               Plotly.newPlot(
@@ -294,7 +294,7 @@
             } else {
               console.log('this.isPlotExist === true')
               this.$refs.temp.title = '溫度'
-              this.$refs.temp.data = [{x: data.time, y: data.temprature, name: '溫度'}]
+              this.$refs.temp.data = [{x: data.time, y: data.temperature, name: '溫度'}]
               Plotly.redraw(this.$refs.temp)
               this.$refs.ph.title = '酸鹼度'
               this.$refs.ph.data = [{x: data.time, y: data.ph, name: '酸鹼度'}]

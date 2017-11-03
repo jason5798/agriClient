@@ -226,7 +226,7 @@
             time.push('00:01')
             time.push(last)
             var empty = [0, 0]
-            datas.temprature = empty
+            datas.temperature = empty
             datas.water = empty
             datas.ph = empty
             datas.ec = empty
@@ -248,15 +248,15 @@
             this.phMin = this.getMinOfArray(datas.ph)
             this.waterMax = this.getMaxOfArray(datas.water)
             this.waterMin = this.getMinOfArray(datas.water)
-            this.tmpMax = this.getMaxOfArray(datas.temprature)
-            this.tmpMin = this.getMinOfArray(datas.temprature)
+            this.tmpMax = this.getMaxOfArray(datas.temperature)
+            this.tmpMin = this.getMinOfArray(datas.temperature)
             this.ecMax = this.getMaxOfArray(datas.ec)
             this.ecMin = this.getMinOfArray(datas.ec)
-            this.tmp = (datas.temprature)[datas.temprature.length - 1]
+            this.tmp = (datas.temperature)[datas.temperature.length - 1]
             this.ph = (datas.ph)[datas.ph.length - 1]
             this.water = (datas.water)[datas.water.length - 1]
             this.ec = (datas.ec)[datas.ec.length - 1]
-            /* console.log('temprature max : ' + this.tmpMax + ' , min : ' + this.tmpMin)
+            /* console.log('temperature max : ' + this.tmpMax + ' , min : ' + this.tmpMin)
             console.log('ph max : ' + this.phMax + ' , min : ' + this.phMin)
             console.log('water max : ' + this.waterMax + ' , min : ' + this.waterMin)
             console.log('ec max : ' + this.ecMax + ' , min : ' + this.ecMin) */
@@ -271,7 +271,7 @@
             }
           }
           // console.log('time : ' + time.length + '=>' + JSON.stringify(time))
-          // console.log('con : ' + datas.temprature.length + '=>' + JSON.stringify(datas.temprature))
+          // console.log('con : ' + datas.temperature.length + '=>' + JSON.stringify(datas.temperature))
           const dataTemp = {
             labels: time,
             datasets: [
@@ -279,7 +279,7 @@
                 label: '溫度',
                 backgroundColor: '#c2c2d6',
                 borderColor: 'rgba(255,255,255,.55)',
-                data: datas.temprature
+                data: datas.temperature
               }
             ]
           }

@@ -15,7 +15,7 @@ export default [
     title: '資料'
   },
   {
-    name: 'information.temprature',
+    name: 'information.temperature',
     title: '溫度'
   },
   {

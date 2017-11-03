@@ -123,7 +123,7 @@
           this.iconArr[idx] = this.icon1
         }
         // console.log('toggleInfoChart after : currentMidx : ' + this.currentMidx + ' ,  idx :' + idx)
-        var device = {mac: marker.macAddr, information: {temprature: 24.8, humidity: 58, ph: 9, con: 700}}
+        var device = {mac: marker.macAddr, information: {temperature: 24.8, humidity: 58, ph: 9, con: 700}}
         this.$emit('toggle-info', device)
       },
       closeInfo () {

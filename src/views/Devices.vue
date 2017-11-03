@@ -99,7 +99,7 @@
         toggleData: {
           mac: '',
           information: {
-            temprature: '',
+            temperature: '',
             humidity: '',
             ph: '',
             con: ''
