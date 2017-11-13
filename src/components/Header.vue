@@ -20,15 +20,17 @@
         <li><a class="dropdown-item" href="#/device-settings"><i class="fa fa-map-marker"></i> 裝置設定</a></li>
         <li><a class="dropdown-item" href="#/profiles"><i class="fa fa-bell-o"></i> 通知設定</a></li>
       </dropdown>
+      <dropdown text="記錄" class="nav-item px-3">
+        <div class="dropdown-header text-center"><strong>系統記錄</strong></div>
+        <li><a class="dropdown-item" href="#/event-log"><i class="fa fa-bell-o"></i> 異常通知記錄</a></li>
+        <!--<a class="dropdown-item" href="#/profiles"><i class="fa fa-hand-pointer-o"></i> 操作記錄</a></li>-->
+      </dropdown>
     </ul>
     <ul class="nav navbar-nav ml-auto">
-      <li class="nav-item d-md-down-none">
-        <a class="nav-link" href="#">
+      <li class="nav-item d-md-down-none" >
+        <a class="nav-link" href="#/event-log">
           <i class="icon-bell" ></i>
-          <div  style="width:30px;height:20px;background-color:#ff9933;border-radius:50%;">
-            <span id="notifyCount">10</span>
-          </div>
-
+            <span id="notifyCount"> </span>&nbsp;異常通知 &nbsp;&nbsp;&nbsp;
         </a>
 
       </li>
@@ -67,9 +69,16 @@
   import navbar from './Navbar'
   import { dropdown } from 'vue-strap'
   document.body.classList.toggle('sidebar-hidden')
-  var notifyCount = 0
 
-  var ws = new WebSocket('ws://localhost:3000/ws/notify')
+  var notifyCount = 0
+  var wsUri = 'ws://localhost:3001/ws/notify'
+  console.log('$ process.env.BASE_API : ' + process.env.BASE_API)
+  if (process.env.BASE_API !== 'http://localhost:8080/data/') {
+    wsUri = 'wss://api-server.mybluemix.net/ws/notify'
+  }
+  console.log('wsUri : ' + wsUri)
+  var ws = new WebSocket(wsUri)
+
   ws.onmessage = function (m) {
     console.log('< from-node-red:', m.data)
     if (typeof m.data === 'string' && m.data !== null) {
@@ -79,6 +88,7 @@
         console.log('msg.v : ' + JSON.stringify(msg.v))
         notifyCount = notifyCount + 1
         console.log('notifyCount : ' + notifyCount)
+        document.getElementById('notifyCount').innerHTML = notifyCount
       }
     }
   }
@@ -89,7 +99,11 @@
       navbar,
       dropdown
     },
+    mounted () {
+      this.$events.on('testEvent', eventData => this.resetNotify())
+    },
     methods: {
+
       click () {
         // do nothing
       },
@@ -103,11 +117,15 @@
       },
       mobileSidebarToggle (e) {
         e.preventDefault()
-        document.body.classList.toggle('sidebar-mobile-show')
+        // document.body.classList.toggle('sidebar-mobile-show')
       },
       asideToggle (e) {
         e.preventDefault()
         document.body.classList.toggle('aside-menu-hidden')
+      },
+      resetNotify () {
+        notifyCount = 0
+        document.getElementById('notifyCount').innerHTML = ''
       }
     }
   }

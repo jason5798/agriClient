@@ -6,7 +6,7 @@
     <img src="static/img/agricultural.jpg" />
     <div class="data-block">
       <h4>
-         裝置 :<small>{{' ' + params.mac}}</small>
+         裝置 :<small>{{' ' + params.name}}</small>
       </h4>
     </div>
     <hr>
@@ -331,7 +331,7 @@
         this.$emit('click-close')
       },
       getMaxOfArray (numArray) {
-        console.log('getMaxOfArray => ' + numArray)
+        // console.log('getMaxOfArray => ' + numArray)
         return Math.max.apply(null, numArray)
       },
       getMinOfArray (numArray) {

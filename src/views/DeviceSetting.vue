@@ -20,7 +20,7 @@
         </button>
         <br>
         <br>
-        <profile-table v-show="isShowProfile" :isDisable="isDisableEdit" :titles="titleData"></profile-table>
+        <profile-table v-if="isShowProfile" :isDisable="isDisableEdit" :titles="titleData"></profile-table>
       </div>
     </div>
     <modal title="Modal title" class="modal-primary" v-model="myModal" @ok="myModal = false" effect="fade/zoom" width="20%">
@@ -44,7 +44,6 @@
   </div>
 </template>
 <script>
-
   import DeviceSetForm from './submenu/DeviceSetForm'
   import ProfileTable from './table/profileTable'
   import DeviceTable from './table/DeviceTable'

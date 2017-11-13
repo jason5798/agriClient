@@ -12,6 +12,7 @@ import Devices from '@/views/Devices'
 import Zone from '@/views/Zone'
 import Profiles from '@/views/Profiles'
 import DeviceSetting from '@/views/DeviceSetting'
+import EventLog from '@/views/EventLog'
 
 // Views - Components
 import Buttons from '@/views/components/Buttons'
@@ -79,6 +80,11 @@ export default new Router({
           path: 'device-settings',
           name: 'DeviceSetting',
           component: DeviceSetting
+        },
+        {
+          path: 'event-log',
+          name: 'EventLog',
+          component: EventLog
         },
         {
           path: 'components',

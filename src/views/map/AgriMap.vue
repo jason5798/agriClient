@@ -28,7 +28,7 @@
       </gmap-map>
     </div>
 
-    <div v-show="isOverMap">
+    <div >
     </div>
   </div>
 </template>
@@ -107,9 +107,11 @@
         this.infoWinOpen = false
       },
       toggleInfoChart (marker, idx) {
+        // Keep last index
         var oldIndex = this.currentMidx
         console.log('toggleInfoChart marker : ' + JSON.stringify(marker))
-        if (this.currentMidx === idx) {
+        // Verify is same maker or not
+        if (this.currentMidx === idx) { // Same maker to change
           this.isOverMap = !this.isOverMap
         } else {
           // if different marker set infowindow to open and reset current marker index
@@ -123,7 +125,8 @@
           this.iconArr[idx] = this.icon1
         }
         // console.log('toggleInfoChart after : currentMidx : ' + this.currentMidx + ' ,  idx :' + idx)
-        var device = {mac: marker.macAddr, information: {temperature: 24.8, humidity: 58, ph: 9, con: 700}}
+        console.log('toggleInfo : marker : ' + JSON.stringify(marker))
+        var device = {name: marker.name, mac: marker.macAddr, information: {temperature: 24.8, humidity: 58, ph: 9, con: 700}}
         this.$emit('toggle-info', device)
       },
       closeInfo () {

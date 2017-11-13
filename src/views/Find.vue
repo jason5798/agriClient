@@ -19,7 +19,18 @@
             <div>
               <form role="form">
               <div class="form-group">
-
+                <label for="exampleInputEmail1">
+                  <h5>開始日期</h5>
+                </label>
+                <DatePicker type="date" placeholder="選擇開始日期時間" format="yyyy-MM-dd HH:mm" :value="info.from" @on-change="fromChange" style="width: 100%"></DatePicker>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">
+                  <h5>結束日期</h5>
+                </label>
+                <DatePicker type="datetime" placeholder="選擇結束日期時間" format="yyyy-MM-dd HH:mm" :value="info.to" @on-change="toChange" style="width: 100%"></DatePicker>
+              </div>
+              <div class="form-group">
                 <label for="exampleInputEmail1">
                   <h5>選擇裝置</h5>
                 </label>
@@ -27,21 +38,6 @@
                   <option disabled value="">請選擇裝置</option>
                   <option v-for="device in bindDeviceList">{{device.name}}</option>
                 </select>
-              </div>
-
-              <div class="form-group">
-
-                <label for="exampleInputEmail1">
-                  <h5>開始日期</h5>
-                </label>
-                <DatePicker type="date" placeholder="選擇開始日期時間" format="yyyy-MM-dd HH:mm" :value="info.from" @on-change="fromChange" style="width: 100%"></DatePicker>
-              </div>
-              <div class="form-group">
-
-                <label for="exampleInputPassword1">
-                  <h5>結束日期</h5>
-                </label>
-                <DatePicker type="date" placeholder="選擇結束日期時間" format="yyyy-MM-dd HH:mm" :value="info.to" @on-change="toChange" style="width: 100%"></DatePicker>
               </div>
               <button type="button" class="btn btn-primary btn-block" @click="toLoadData">
                 <i v-show="isShowLoading" class='fa fa-spinner fa-spin '></i><h5>查詢</h5>
@@ -131,6 +127,7 @@
   import FieldDefs from './table/FieldDefs.js'
   import MyVuetable from './table/MyVuetable'
   import {getDatas} from '../api/todos'
+  import {getDateToString} from '../utils/dateTools'
   // Get API url
   const url3 = process.env.BASE_API + 'todos/devices'
   // console.log('url3 ' + url3)
@@ -224,8 +221,9 @@
         let now = new Date()
         let oneWeekAgo = new Date()
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-        this.info.to = this.getDateString(now)
-        this.info.from = this.getDateString(oneWeekAgo)
+        // this.info.to = this.getDateString(now)
+        this.info.to = getDateToString(now, 0)          // time = current time
+        this.info.from = getDateToString(oneWeekAgo, 1) // time = 00:00
         // console.log(typeof this.info.from + ' : ' + this.info.from)
         // console.log(typeof this.info.to + ' : ' + this.info.to)
       },
@@ -472,7 +470,17 @@
         this.info.from = date
       },
       toChange (date) {
-        this.info.to = date
+        var now = new Date()
+        var mdate = new Date(date)
+        var nowString = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
+        var mdateString = mdate.getFullYear() + '-' + (mdate.getMonth() + 1) + '-' + mdate.getDate()
+        if (nowString === mdateString) {
+          mdateString = getDateToString(now, 0) // time = current time
+        } else {
+          mdateString = getDateToString(mdate, 2) // time = 23:59
+        }
+        // alert(mdateString)
+        this.info.to = mdateString
       },
       warning () {
         this.$Notice.config({

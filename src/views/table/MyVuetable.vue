@@ -142,7 +142,7 @@
         Vue.nextTick(() => this.$refs.vuetable.refresh())
       },
       onChangeOption (params) {
-        console.log('change-option mac : ' + params.mac + ',  from : ' + params.from + ' , to : ' + params.to)
+        /* console.log('change-option mac : ' + params.mac + ',  from : ' + params.from + ' , to : ' + params.to)
         var time = new Date(params.to)
         time.setDate(time.getDate() + 1)
         var a = time.getMonth() + 1
@@ -170,8 +170,10 @@
 
         console.log(typeof time)
         this.appendParams.to = toString
+        this.appendParams.from = fromString */
+        this.appendParams.to = params.to
+        this.appendParams.from = params.from
         this.appendParams.mac = params.mac
-        this.appendParams.from = fromString
         Vue.nextTick(() => this.$refs.vuetable.refresh())
       },
       isLoded () {

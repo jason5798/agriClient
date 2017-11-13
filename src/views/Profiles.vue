@@ -11,7 +11,7 @@
         </notify-set-form>
       </div>
       <div class="col-md-9">
-        <profile-table :titles="titleData"></profile-table>
+        <profile-table :titles="titleData" :isDisable="isDisable"></profile-table>
       </div>
     </div>
   </div>
@@ -37,7 +37,8 @@
         firstDevice: '請選擇裝置',
         firstProfile: '請選擇通知設定',
         newProfile: {},
-        titleData: ['名稱', '最大值', '超過最大值提示', '最小值', '低於最小值提示']
+        titleData: ['名稱', '最大值', '超過最大值提示', '最小值', '低於最小值提示'],
+        isDisable: false
       }
     },
     methods: {

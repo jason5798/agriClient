@@ -3,33 +3,23 @@ export default [
     name: '__sequence',
     title: '#',
     titleClass: 'center aligned',
-    dataClass: 'right aligned'
+    dataClass: 'center aligned'
+  },
+  {
+    name: 'date',
+    title: '日期',
+    sortField: 'date'
   },
   {
     name: 'name',
-    sortField: 'name'
+    title: '裝置名稱'
   },
   {
-    name: 'email',
-    sortField: 'email'
+    name: 'common',
+    title: '裝置識別碼'
   },
   {
-    name: 'birthdate',
-    sortField: 'birthdate',
-    titleClass: 'center aligned',
-    dataClass: 'center aligned',
-    callback: 'formatDate|DD-MM-YYYY'
-  },
-  {
-    name: 'nickname',
-    sortField: 'nickname',
-    callback: 'allcap'
-  },
-  {
-    name: 'salary',
-    sortField: 'salary',
-    titleClass: 'center aligned',
-    dataClass: 'right aligned',
-    callback: 'formatNumber'
+    name: 'message',
+    title: '內容'
   }
 ]

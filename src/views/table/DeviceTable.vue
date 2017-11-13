@@ -16,13 +16,13 @@
           </tr>
           </thead>
           <tbody>
-          <tr >
+          <tr v-if="selectBindDevice.position !== undefined">
             <td>
               <input v-if="isAddDevice" name="mac" v-model="selectBindDevice.macAddr" type="text" placeholder="" />
               <span v-else>{{selectBindDevice.macAddr}}</span>
             </td>
             <td>
-              <input name="lat" v-model="selectBindDevice.position.lat"  type="number" placeholder="" />
+              <input  name="lat" v-model="selectBindDevice.position.lat"  type="number" placeholder="" />
             </td>
             <td>
               <input name="min" v-model="selectBindDevice.position.lng" type="number" placeholder="" />

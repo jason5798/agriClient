@@ -91,8 +91,8 @@
         iconList: icons,
         all: [],
         center: {
-          lat: 23.898406,
-          lng: 121.544638
+          lat: 22.978395,
+          lng: 120.550663
         },
         isOverView: false,
         isOverLoading: false,
@@ -110,17 +110,19 @@
     methods: {
       init () {
         this.$store.dispatch('getBindDeviceList').then(response => {
-          this.markerList = response.data
-          // console.log(' this.marks : ' + JSON.stringify(this.marks))
-          // console.log(' this.markerList : ' + JSON.stringify(this.markerList))
+          var list = response.data
+          console.log('$ Bind list : ' + JSON.stringify(list))
+
           this.marks = [[], [], []]
-          for (var j in this.markerList) {
-            if ((this.markerList[j].name).includes('土壤')) {
-              this.marks[1].push(this.markerList[j])
+          for (var j in list) {
+            if ((list[j].name).includes('土壤')) {
+              this.marks[1].push(list[j])
             } else {
-              this.marks[0].push(this.markerList[j])
+              this.marks[0].push(list[j])
             }
           }
+          this.markerList = this.marks[0]
+          console.log(' this.markerList : ' + JSON.stringify(this.markerList))
           console.log(' this.marks : ' + JSON.stringify(this.marks))
         }).catch(function (error) {
           console.log('? getBindDeviceList  error :' + error)

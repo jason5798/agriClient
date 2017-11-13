@@ -8,7 +8,7 @@ export default [
   {
     name: 'date',
     title: '日期',
-    sortField: 'recv'
+    sortField: 'date'
   },
   {
     name: 'data',
