@@ -1,15 +1,14 @@
 <template>
   <div class="app">
     <AppHeader/>
-    <div class="app-body">
-      <Sidebar/>
+    <div class="app-body BG-All">
+      <!--<Sidebar/>-->
       <main class="main">
-        <breadcrumb :list="list"/>
+        <!--<breadcrumb :list="list"/>-->
         <div class="container-fluid">
           <router-view></router-view>
         </div>
       </main>
-      <AppAside/>
     </div>
     <AppFooter/>
   </div>
@@ -17,19 +16,17 @@
 
 <script>
 import AppHeader from '../components/Header'
-import Sidebar from '../components/Sidebar'
-import AppAside from '../components/Aside'
+// import Sidebar from '../components/Sidebar'
 import AppFooter from '../components/Footer'
-import Breadcrumb from '../components/Breadcrumb'
+// import Breadcrumb from '../components/Breadcrumb'
 
 export default {
   name: 'full',
   components: {
     AppHeader,
-    Sidebar,
-    AppAside,
-    AppFooter,
-    Breadcrumb
+    // Sidebar,
+    AppFooter
+    /* ,Breadcrumb */
   },
   computed: {
     name () {

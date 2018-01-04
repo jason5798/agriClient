@@ -3,10 +3,10 @@
     <button type="button" class="close" aria-label="Close" @click="clickClose">
       <span aria-hidden="true">&times;</span>
     </button>
-    <img src="static/img/agricultural.jpg" />
-    <div class="data-block">
+    <img class="topimg" src="static/img/agricultural.jpg" />
+    <div class="data-title">
       <h4>
-         裝置 :<small>{{' ' + params.name}}</small>
+        裝置 :<small>{{' ' + params.name}}</small>
       </h4>
     </div>
     <hr>
@@ -40,7 +40,7 @@
       <hr>
       <div class="row data-block">
         <div class="col-md-4">
-          土壤水分含量
+          土壤水含量
           <h5>
             {{water}}%
           </h5>
@@ -89,7 +89,7 @@
       <hr>
       <div class="row data-block">
         <div class="col-md-4">
-          電導度
+          電導度<br>
           <h5>
             {{ec}}
           </h5>
@@ -120,7 +120,6 @@
 </template>
 <script>
   import DailyIncome from '../charts/DailyIncome'
-  import CardLine3ChartExample from '../dashboard/CardLine3ChartExample'
   import {getDatas} from '../../api/todos'
 
   const datasets = [
@@ -165,13 +164,12 @@
   }
 
   export default {
-    name: 'chart-info',
+    name: 'charts-info',
     props: {
       params: Object
     },
     components: {
-      DailyIncome,
-      CardLine3ChartExample
+      DailyIncome
     },
     data () {
       return {
@@ -216,7 +214,7 @@
         console.log('test val : ' + JSON.stringify(val))
         getDatas({mac: val.mac}).then(response => {
           var datas = response.data
-          // console.log('datas : ' + JSON.stringify(datas))
+          console.log('datas : ' + JSON.stringify(datas))
 
           var time = []
           // console.log('*************** last')
@@ -252,14 +250,14 @@
             this.tmpMin = this.getMinOfArray(datas.temperature)
             this.ecMax = this.getMaxOfArray(datas.ec)
             this.ecMin = this.getMinOfArray(datas.ec)
-            this.tmp = (datas.temperature)[datas.temperature.length - 1]
-            this.ph = (datas.ph)[datas.ph.length - 1]
-            this.water = (datas.water)[datas.water.length - 1]
-            this.ec = (datas.ec)[datas.ec.length - 1]
-            /* console.log('temperature max : ' + this.tmpMax + ' , min : ' + this.tmpMin)
+            this.tmp = (datas.temperature)[0]
+            this.ph = (datas.ph)[0]
+            this.water = (datas.water)[0]
+            this.ec = (datas.ec)[0]
+            console.log('temperature max : ' + this.tmpMax + ' , min : ' + this.tmpMin)
             console.log('ph max : ' + this.phMax + ' , min : ' + this.phMin)
             console.log('water max : ' + this.waterMax + ' , min : ' + this.waterMin)
-            console.log('ec max : ' + this.ecMax + ' , min : ' + this.ecMin) */
+            console.log('ec max : ' + this.ecMax + ' , min : ' + this.ecMin)
             for (var i = 0; i < length; i++) {
               if (i === 0) {
                 time.push('00:01')
@@ -271,7 +269,7 @@
             }
           }
           // console.log('time : ' + time.length + '=>' + JSON.stringify(time))
-          // console.log('con : ' + datas.temperature.length + '=>' + JSON.stringify(datas.temperature))
+          console.log('con : ' + datas.temperature.length + '=>' + JSON.stringify(datas.temperature))
           const dataTemp = {
             labels: time,
             datasets: [
@@ -343,16 +341,21 @@
 
 <style>
   .chart-info{
-    background-color: white;
-    margin-top: 5px;
-    margin-left: 6px;
-    height: 99%;
-    width: 96%;
+    background-color: #e6f2ff;
+    margin-top: 0px;
+    margin-left: 0px;
+    height: auto;
+    width: auto;
     border-radius: 6px;
+  }
+  .data-title{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
   }
   .data-block{
     margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   .chart-info img{
     widith: 230px;
@@ -365,8 +368,13 @@
   .block-icon-2{
     color: #0088d2;
   }
+  .topimg{
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 90%;
+  }
   .chart-view {
-    width: 200px;
+    width: 60%;
     height: 80px;
   // background-color: yellow;
   }

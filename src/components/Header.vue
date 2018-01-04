@@ -1,13 +1,9 @@
 <template>
   <navbar>
-    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button" @click="mobileSidebarToggle">&#9776;</button>
-    <a class="navbar-brand" href="#"></a>
-    <ul class="nav navbar-nav d-md-down-none">
-      <!--li class="nav-item">
-        <a class="nav-link navbar-toggler sidebar-toggler" href="#" @click="sidebarMinimize">&#9776;</a>
-      </li>-->
+    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button" @click="mobileSidebarToggle">&#9776;</button>    <a class="navbar-brand" href="#"></a>
+    <ul class="nav navbar-nav d-md-down-none mr-auto">
       <li class="nav-item px-3">
-        <a class="nav-link" href="#/devices">裝置</a>
+        <a class="nav-link" href="#/device">裝置</a>
       </li>
       <li class="nav-item px-3">
         <a class="nav-link" href="#/find">查詢</a>
@@ -30,7 +26,7 @@
       <li class="nav-item d-md-down-none" >
         <a class="nav-link" href="#/event-log">
           <i class="icon-bell" ></i>
-            <span id="notifyCount"> </span>&nbsp;異常通知 &nbsp;&nbsp;&nbsp;
+          <span id="notifyCount"> </span>&nbsp;異常通知 &nbsp;&nbsp;&nbsp;
         </a>
 
       </li>
@@ -58,75 +54,42 @@
           <a class="dropdown-item" href="#"><i class="fa fa-lock"></i> Logout</a>-->
         </div>
       </dropdown>
-      <!--<li class="nav-item d-md-down-none">
-        <a class="nav-link navbar-toggler aside-menu-toggler" href="#" @click="asideToggle">&#9776;</a>
-      </li>-->
     </ul>
   </navbar>
 </template>
 <script>
 
-  import navbar from './Navbar'
-  import { dropdown } from 'vue-strap'
-  document.body.classList.toggle('sidebar-hidden')
+import navbar from './Navbar'
+import { dropdown } from 'vue-strap'
 
-  var notifyCount = 0
-  var wsUri = 'ws://localhost:3001/ws/notify'
-  console.log('$ process.env.BASE_API : ' + process.env.BASE_API)
-  if (process.env.BASE_API !== 'http://localhost:8080/data/') {
-    wsUri = 'wss://api-server.mybluemix.net/ws/notify'
-  }
-  console.log('wsUri : ' + wsUri)
-  var ws = new WebSocket(wsUri)
+document.body.classList.toggle('sidebar-hidden')
 
-  ws.onmessage = function (m) {
-    console.log('< from-node-red:', m.data)
-    if (typeof m.data === 'string' && m.data !== null) {
-      var msg = JSON.parse(m.data)
-      console.log('from-node-red : id:' + msg.id)
-      if (msg.id === 'event_notity') {
-        console.log('msg.v : ' + JSON.stringify(msg.v))
-        notifyCount = notifyCount + 1
-        console.log('notifyCount : ' + notifyCount)
-        document.getElementById('notifyCount').innerHTML = notifyCount
-      }
+export default {
+  name: 'header',
+  components: {
+    navbar,
+    dropdown
+  },
+  methods: {
+    click () {
+      // do nothing
+    },
+    sidebarToggle (e) {
+      e.preventDefault()
+      document.body.classList.toggle('sidebar-hidden')
+    },
+    sidebarMinimize (e) {
+      e.preventDefault()
+      document.body.classList.toggle('sidebar-minimized')
+    },
+    mobileSidebarToggle (e) {
+      e.preventDefault()
+      document.body.classList.toggle('sidebar-mobile-show')
+    },
+    asideToggle (e) {
+      e.preventDefault()
+      document.body.classList.toggle('aside-menu-hidden')
     }
   }
-
-  export default {
-    name: 'header',
-    components: {
-      navbar,
-      dropdown
-    },
-    mounted () {
-      this.$events.on('testEvent', eventData => this.resetNotify())
-    },
-    methods: {
-
-      click () {
-        // do nothing
-      },
-      sidebarToggle (e) {
-        e.preventDefault()
-        document.body.classList.toggle('sidebar-hidden')
-      },
-      sidebarMinimize (e) {
-        e.preventDefault()
-        document.body.classList.toggle('sidebar-minimized')
-      },
-      mobileSidebarToggle (e) {
-        e.preventDefault()
-        // document.body.classList.toggle('sidebar-mobile-show')
-      },
-      asideToggle (e) {
-        e.preventDefault()
-        document.body.classList.toggle('aside-menu-hidden')
-      },
-      resetNotify () {
-        notifyCount = 0
-        document.getElementById('notifyCount').innerHTML = ''
-      }
-    }
-  }
+}
 </script>

@@ -2,7 +2,8 @@ const status = {
   state: {
     isLoading: false,
     isAddProfile: false,
-    isAddDevice: false
+    isAddDevice: false,
+    isDeviceForm: false
   },
   mutations: {
     SET_IS_LOADING: (state, status) => {
@@ -16,6 +17,10 @@ const status = {
     SET_IS_ADD_DEVICE: (state, status) => {
       state.isAddDevice = status
       console.log('$ store SET_IS_ADD_DEVICE : ' + state.isAddDevice)
+    },
+    SET_IS_DEVICE_FORM: (state, status) => {
+      state.isDeviceForm = status
+      console.log('$ store SET_IS_DEVICE_FORM : ' + state.isDeviceForm)
     }
   },
   actions: {
@@ -29,8 +34,9 @@ const status = {
     setIsAddDevice: ({commit}, status) => {
       commit('SET_IS_ADD_DEVICE', status)
     },
-    setTest: ({commit}, status) => {
-      console.log('***************************** test ok *********************************')
+    // Jason add for check watch select profile from form or table
+    setIsDeviceForm: ({commit}, status) => {
+      commit('SET_IS_DEVICE_FORM', status)
     }
   }
 }

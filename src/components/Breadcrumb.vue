@@ -1,5 +1,5 @@
 <template>
-  <ol v-show="isShow" class="breadcrumb">
+  <ol class="breadcrumb">
     <li class="breadcrumb-item" v-for="(item, index) in list"><span class="active" v-if="isLast(index)">{{ showName(item) }}</span>
       <router-link :to="item.path" v-else>{{ showName(item) }}</router-link>
     </li>
@@ -13,11 +13,6 @@ export default {
       type: Array,
       required: true,
       default: () => []
-    }
-  },
-  data () {
-    return {
-      isShow: false
     }
   },
   methods: {

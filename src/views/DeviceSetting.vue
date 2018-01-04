@@ -1,29 +1,26 @@
 <template>
   <div class="container-giot">
+
     <div class="row row-giot">
       <div  class="col-md-3">
         <device-set-form
           :preProfile="firstProfile"
+          @click-profile="onClickProfile"
           @change-mode="changeMode"
-          @click-new="onAddDevice"
-          @click-change="onUpdateDevice"
-          @click-delete="onDeleteDevice">
+          @click-new="onAddDevice">
         </device-set-form>
       </div>
       <div class="col-md-9">
-        <device-table :titles="deviceTitleData" @click-profile="onClickProfile"></device-table>
-        <button v-if="isShowProfile" type="button" class="btn" @click="onChange(false)">
-          隱藏異常通知內容
-        </button>
-        <button v-else type="button" class="btn btn-info" @click="onChange(true)">
-          顯示異常通知內容
-        </button>
-        <br>
-        <br>
-        <profile-table v-if="isShowProfile" :isDisable="isDisableEdit" :titles="titleData"></profile-table>
+        <device-table :titles="deviceTitleData"
+                      :deviceList="devices"
+                      @click-profile="onClickProfile"
+                      @edit-device="onUpdateDevice"
+                      @del-device="onDeleteDevice">
+        </device-table>
       </div>
     </div>
-    <modal title="Modal title" class="modal-primary" v-model="myModal" @ok="myModal = false" effect="fade/zoom" width="20%">
+    <spinner ref="spinner" size="xl" fixed="true" text="處理中........."></spinner>
+    <modal title="Modal title" large class="modal-primary" v-model="myModal" @ok="myModal = false" effect="fade/zoom">
       <div slot="modal-header" class="modal-header">
         <h4 class="modal-title">異常通知設定選擇</h4>
       </div>
@@ -36,9 +33,58 @@
           <option value="">不指定</option>
           <option v-for="profile in profileList">{{profile.name}}</option>
         </select>
+        <br>
+        <hr>
+        <profile-table :isDisable="isDisableEdit" :titles="titleData"></profile-table>
       </div>
+
       <div slot="modal-footer" class="modal-footer">
         <button type="button" class="btn btn-default" @click="myModal = false">離開</button>
+      </div>
+    </modal>
+    <!------------------------------------ Delete modal -------------------------------->
+    <modal title="Modal title" class="modal-danger" v-model="deleteModal" @ok="deleteModal = false" effect="fade/zoom">
+      <div slot="modal-header" class="modal-header">
+        <h4 class="modal-title">刪除綁定裝置</h4>
+      </div>
+      <div slot="modal-body" class="modal-body">
+        <label >
+          <h5>確定要刪除綁定裝置?</h5>
+        </label>
+      </div>
+      <div slot="modal-footer" class="modal-footer">
+        <button type="button" class="btn btn-default" @click="deleteModal = false">離開</button>
+        <button type="button" class="btn btn-danger" @click="toDeleteDevice">刪除</button>
+      </div>
+    </modal>
+    <!------------------------------------ Update modal -------------------------------->
+    <modal title="Modal title" class="modal-primary" v-model="updateModal" @ok="updateModal = false" effect="fade/zoom">
+      <div slot="modal-header" class="modal-header">
+        <h4 class="modal-title">更新裝置設定</h4>
+      </div>
+      <div slot="modal-body" class="modal-body">
+        <label >
+          <h5>確定要更新裝置設定?</h5>
+        </label>
+      </div>
+      <div slot="modal-footer" class="modal-footer">
+        <button type="button" class="btn btn-default" @click="updateModal = false">離開</button>
+        <button type="button" class="btn btn-primary" @click="toUpdateDevice">更新</button>
+      </div>
+    </modal>
+    <!------------------------------------ Add modal -------------------------------->
+    <modal title="Modal title" class="modal-primary" v-model="addModal" @ok="addModal = false" effect="fade/zoom">
+      <div slot="modal-header" class="modal-header">
+        <h4 class="modal-title">新增綁定裝置</h4>
+      </div>
+      <div slot="modal-body" class="modal-body">
+        <label >
+          <h5>確定要新增綁定裝置?</h5>
+        </label>
+      </div>
+      <div slot="modal-footer" class="modal-footer">
+        <button type="button" class="btn btn-default" @click="addModal = false">離開</button>
+        <button type="button" class="btn btn-primary" @click="toAddDevice">新增</button>
       </div>
     </modal>
   </div>
@@ -47,7 +93,7 @@
   import DeviceSetForm from './submenu/DeviceSetForm'
   import ProfileTable from './table/profileTable'
   import DeviceTable from './table/DeviceTable'
-  import modal from 'vue-strap/src/Modal'
+  import {modal, spinner} from 'vue-strap'
   import { mapGetters } from 'vuex'
   import {getProfileByType} from '../api/profileSetting'
 
@@ -57,7 +103,8 @@
       ProfileTable,
       DeviceTable,
       DeviceSetForm,
-      modal
+      modal,
+      spinner
     },
     created () {
       this.initData()
@@ -71,13 +118,17 @@
     data () {
       return {
         myModal: false,
+        addModal: false,
+        updateModal: false,
+        deleteModal: false,
+        processDevice: null,
         test: true,
         isDisableEdit: true,
-        isShowProfile: false,
         deviceCount: 0,
         firstDevice: '請選擇裝置',
         firstProfile: '請選擇通知設定',
         newProfile: {},
+        devices: [],
         newDevice: {
           'name': '',
           'macAddr': '',
@@ -87,7 +138,7 @@
             'lng': ''
           }},
         titleData: ['名稱', '最大值', '超過最大值提示', '最小值', '低於最小值提示'],
-        deviceTitleData: ['裝置識別碼', '座標緯度', '座標經度', '異常通知名稱']
+        deviceTitleData: ['裝置名稱', '裝置識別碼', '座標緯度', '座標經度', '異常通知名稱']
       }
     },
     methods: {
@@ -151,11 +202,12 @@
         device.profileName = name
         this.$store.dispatch('setSelectDevice', device)
       },
-      onClickProfile () {
+      onClickProfile (index) {
+        console.log('onClickProfile : ' + index)
         this.myModal = true
       },
       onChange (isShow) {
-        this.isShowProfile = isShow
+        // this.isShowProfile = isShow
       },
       devicetransfer (device) {
         if (device.macAddr.length === 8) {
@@ -166,6 +218,13 @@
         return device
       },
       onAddDevice (device) {
+        this.processDevice = device
+        this.addModal = true
+      },
+      toAddDevice () {
+        this.addModal = false
+        var device = this.processDevice
+        this.$refs.spinner.show()
         // Add profile to global profile list
         device = this.devicetransfer(device)
         console.log('$ onAddDevicedevice lat type : ' + typeof device.lat)
@@ -173,11 +232,20 @@
         this.$store.dispatch('addBindDevice', device).then(response => {
           console.log('$ onAddDevice : ' + JSON.stringify(response.data))
           this.setCurrentStatus(false)
+          this.$refs.spinner.hide()
         }).catch(function (error) {
           console.log('? onAddDevice  error :' + error)
+          this.$refs.spinner.hide()
         })
       },
       onUpdateDevice (device) {
+        this.processDevice = device
+        this.updateModal = true
+      },
+      toUpdateDevice () {
+        this.$refs.spinner.show()
+        this.updateModal = false
+        var device = this.processDevice
         device = this.devicetransfer(device)
         console.log('$ onAddDevicedevice lat type : ' + typeof device.lat)
         console.log('Parent : press update button  device  : ' + JSON.stringify(device))
@@ -185,17 +253,28 @@
         this.$store.dispatch('updateBindDevice', device).then(response => {
           console.log('$ onUpdateDevice : ' + JSON.stringify(response.data))
           this.setCurrentStatus(false)
+          this.$refs.spinner.hide()
         }).catch(function (error) {
+          this.$refs.spinner.hide()
           console.log('? onUpdateDevice  error :' + error)
         })
       },
       onDeleteDevice (device) {
+        this.processDevice = device
+        this.deleteModal = true
+      },
+      toDeleteDevice () {
+        this.$refs.spinner.show()
+        this.deleteModal = false
+        var device = this.processDevice
         console.log('Parent : press update button  profile  name: ' + device.name)
         // Delete profile to global profile list
         this.$store.dispatch('deleteBindDevice', device.name).then(response => {
           console.log('$ onDeleteDevice : ' + JSON.stringify(response.data))
           this.setCurrentStatus(false)
+          this.$refs.spinner.hide()
         }).catch(function (error) {
+          this.$refs.spinner.hide()
           console.log('? onDeleteDevice  error :' + error)
         })
       },
@@ -220,18 +299,18 @@
       },
       setCurrentStatus (isInit) {
         var profiles = this.$store.getters.profileList
-        var deviceList = this.$store.getters.bindDeviceList
+        this.devices = this.$store.getters.bindDeviceList
         // For init setting
         if (isInit === true) {
           console.log('# setCurrentStatus  isInit : true , profiles.length : ' + profiles.length)
-          if (deviceList.length > 0) {
-            this.$store.dispatch('setSelectDevice', deviceList[0])
+          if (this.devices.length > 0) {
+            this.$store.dispatch('setSelectDevice', this.devices[0])
             this.$store.dispatch('setIsAddDevice', false) // Edit mode
           } else if (profiles.length === 0) {
             this.$store.dispatch('setSelectDevice', this.newDevice)
             this.$store.dispatch('setIsAddDevice', true) // Add mode
           }
-          var name = deviceList[0]['profileName']
+          var name = this.devices[0]['profileName']
           console.log('***** There are profile name : ' + name)
           if (profiles.length > 0 && name !== '') {
             for (var b = 0; b < profiles.length; b++) {
@@ -244,11 +323,11 @@
           // For process add, delete and update profile
           // if is add or update keep select profile setting
           console.log('# setCurrentStatus  isInit : false , profiles.length : ' + profiles.length)
-          if (this.deviceCount > deviceList.length) {
+          if (this.deviceCount > this.devices.length) {
             // Delete device setting
             console.log('# setCurrentStatus : Delete device setting ')
-            if (deviceList.length > 0) {
-              this.$store.dispatch('setSelectDevice', deviceList[0])
+            if (this.devices.length > 0) {
+              this.$store.dispatch('setSelectDevice', this.devices[0])
               this.$store.dispatch('setIsAddDevice', false) // Edit mode
             } else {
               this.$store.dispatch('setSelectDevice', this.newDevice)
@@ -260,7 +339,7 @@
             this.$store.dispatch('setIsAddDevice', false) // Edit mode
           }
         }
-        this.deviceCount = deviceList.length // Reset profile count
+        this.deviceCount = this.devices.length // Reset profile count
       }
     }
   }

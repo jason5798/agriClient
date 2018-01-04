@@ -18,31 +18,34 @@
           <div class="card-block">
             <div>
               <form role="form">
-              <div class="form-group">
-                <label for="exampleInputEmail1">
-                  <h5>開始日期</h5>
-                </label>
-                <DatePicker type="date" placeholder="選擇開始日期時間" format="yyyy-MM-dd HH:mm" :value="info.from" @on-change="fromChange" style="width: 100%"></DatePicker>
-              </div>
-              <div class="form-group">
-                <label for="exampleInputPassword1">
-                  <h5>結束日期</h5>
-                </label>
-                <DatePicker type="datetime" placeholder="選擇結束日期時間" format="yyyy-MM-dd HH:mm" :value="info.to" @on-change="toChange" style="width: 100%"></DatePicker>
-              </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">
-                  <h5>選擇裝置</h5>
-                </label>
-                <select v-model="info.name" class="form-control" @change="selectDeviceOption">
-                  <option disabled value="">請選擇裝置</option>
-                  <option v-for="device in bindDeviceList">{{device.name}}</option>
-                </select>
-              </div>
-              <button type="button" class="btn btn-primary btn-block" @click="toLoadData">
-                <i v-show="isShowLoading" class='fa fa-spinner fa-spin '></i><h5>查詢</h5>
-              </button>
-            </form>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">
+                    <h5>開始日期</h5>
+                  </label>
+                  <DatePicker type="date" placeholder="選擇開始日期時間" format="yyyy-MM-dd HH:mm" :value="info.from" @on-change="fromChange" style="width: 100%"></DatePicker>
+                  <!--<datepicker :value.sync="info.from" :format="format"></datepicker>-->
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">
+                    <h5>結束日期</h5>
+                  </label>
+                  <DatePicker type="datetime" placeholder="選擇結束日期時間" format="yyyy-MM-dd HH:mm" :value="info.to" @on-change="toChange" style="width: 100%"></DatePicker>
+                  <!--<datepicker :value.sync="info.to" :format="format"></datepicker>-->
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleInputEmail1">
+                    <h5>選擇裝置</h5>
+                  </label>
+                  <select v-model="info.name" class="form-control" @change="selectDeviceOption">
+                    <option disabled value="">請選擇裝置</option>
+                    <option v-for="device in bindDeviceList">{{device.name}}</option>
+                  </select>
+                </div>
+                <button type="button" class="btn btn-primary btn-block" @click="toLoadData">
+                  <i v-show="isShowLoading" class='fa fa-spinner fa-spin '></i><h5>查詢</h5>
+                </button>
+              </form>
             </div>
           </div>
         </div>
@@ -54,7 +57,7 @@
             <div class="row">
               <div class="col-md-4">
                 <tooltip effect="scale" placement="bottom" content="折線圖">
-                  <button type="button" class="btn btn-success" @click="showPlot">
+                  <button type="button" class="btn btn-success" @click="showChart">
                     <i class="fa fa-line-chart"></i>
                   </button>
                 </tooltip>
@@ -92,28 +95,89 @@
           </div>
           <div class="card-block">
             <div class="row">
-            <div class="col-md-12">
-              <div style="width:100%; height:1200px;">
-                <div v-show="isShowTable">
-                  <my-vuetable
-                    :api-url="api_url"
-                    :fields="fields"
-                    :sort-order="sortOrder"
-                    :append-params="moreParams"
-                    detail-row-component="my-detail-row"
-                    @close-loded="closeLoading"
-                    ref="tablechild"
-                  ></my-vuetable>
-                </div>
-                <div v-show="isShowLine" class="tile is-ancestor">
-                  <div ref="temp"  style="width:100%; height:300px;"></div>
-                  <div ref="ph"  style="width:100%; height:300px;"></div>
-                  <div ref="water"  style="width:100%; height:300px;"></div>
-                  <div ref="ec"  style="width:100%; height:300px;"></div>
+              <div class="col-md-12">
+                <div style="width:100%; height:auto;">
+                  <div v-show="!isShowLine">
+                    <my-vuetable
+                      :api-url="api_url"
+                      :fields="fields"
+                      :sort-order="sortOrder"
+                      :append-params="moreParams"
+                      detail-row-component="my-detail-row"
+                      @close-loded="closeLoading"
+                      ref="tablechild"
+                    ></my-vuetable>
+                  </div>
+                  <div v-show="isShowLine" class="tile is-ancestor" >
+                    <!--<div ref="temp"  style="width:100%; height:300px;"></div>
+                    <div ref="ph"  style="width:100%; height:300px;"></div>
+                    <div ref="water"  style="width:100%; height:300px;"></div>
+                    <div ref="ec"  style="width:100%; height:300px;"></div>-->
+                    <div class="row">
+                      <div class="col-sm-5">
+                        <h4 class="card-title mb-0 text-center">溫度</h4>
+                      </div><!--/.col-->
+                      <div class="col-sm-7 hidden-sm-down">
+                        <!--<button type="button" class="btn btn-primary float-right"><i class="icon-cloud-download"></i></button>
+                        <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+                          <div class="btn-group mr-3" data-toggle="buttons" aria-label="First group">
+                            <label class="btn btn-outline-secondary">
+                              <input type="radio" name="options" id="option1"> Day
+                            </label>
+                            <label class="btn btn-outline-secondary active">
+                              <input type="radio" name="options" id="option2" checked> Month
+                            </label>
+                            <label class="btn btn-outline-secondary">
+                              <input type="radio" name="options" id="option3" > Year
+                            </label>
+                          </div>
+                        </div>-->
+                      </div><!--/.col-->
+                    </div><!--/.row-->
+
+                    <daily-income
+                      :chart-data="tempData"
+                      :options="mOptions"
+                      :width = "400"
+                      :height = "300"
+                    ></daily-income>
+                    <div class="row">
+                      <div class="col-sm-5">
+                        <h4 class="card-title mb-0 text-center">酸鹼值</h4>
+                      </div>
+                    </div>
+                    <daily-income
+                      :chart-data="phData"
+                      :options="mOptions"
+                      :width = "400"
+                      :height = "300"
+                    ></daily-income>
+                    <div class="row">
+                      <div class="col-sm-5">
+                        <h4 class="card-title mb-0 text-center">水含量</h4>
+                      </div>
+                    </div>
+                    <daily-income
+                      :chart-data="waterData"
+                      :options="mOptions"
+                      :width = "400"
+                      :height = "300"
+                    ></daily-income>
+                    <div class="row">
+                      <div class="col-sm-5">
+                        <h4 class="card-title mb-0 text-center">電導度</h4>
+                      </div>
+                    </div>
+                    <daily-income
+                      :chart-data="ecData"
+                      :options="mOptions"
+                      :width = "400"
+                      :height = "300"
+                    ></daily-income>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
@@ -123,42 +187,85 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import Plotly from 'plotly.js/dist/plotly'
   import FieldDefs from './table/FieldDefs.js'
   import MyVuetable from './table/MyVuetable'
   import {getDatas} from '../api/todos'
   import {getDateToString} from '../utils/dateTools'
+  // import { datepicker } from 'vue-strap'
+  import DailyIncome from './charts/DailyIncome'
   // Get API url
   const url3 = process.env.BASE_API + 'todos/devices'
   // console.log('url3 ' + url3)
-  var layout = {
-    'title': '溫度',
-    'xaxis': {
-      color: '#06f',
-      type: 'date',
-      'tickprefix': '',
-      'showtickprefix': 'first',
-      'ticksuffix': ' ',
-      'showticksuffix': 'last',
-      'separatethousands': true
-    },
-    'yaxis': {
-      'type': 'log'
-    },
-    width: 850
+  /* const datasets = [
+    {
+      label: 'My First dataset',
+      backgroundColor: '#c2c2d6',
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [0, 0]
+    }
+  ] */
+  const data = {
+    labels: ['0:00', '現在'],
+    datasets: [
+      {
+        label: 'My First dataset',
+        backgroundColor: '#c2c2d6',
+        data: [0, 0]
+      }
+    ]
   }
-  var layout2 = JSON.parse(JSON.stringify(layout))
-  layout2.title = '酸鹼度'
-  var layout3 = JSON.parse(JSON.stringify(layout))
-  layout3.title = '水含量'
-  var layout4 = JSON.parse(JSON.stringify(layout))
-  layout4.title = '電導度'
+  const options = {
+    maintainAspectRatio: false,
+    legend: {
+      display: false
+    },
+    scales: {
+      xAxes: [{
+        gridLines: {
+          color: 'black'
+        },
+        type: 'time',
+        time: {
+          displayFormats: {
+            'hour': 'MM/DD HH',
+            'day': 'MM/DD'
+          }
+        },
+        ticks: {
+          beginAtZero: true,
+          maxTicksLimit: 8,
+          stepSize: 0
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          beginAtZero: true,
+          maxTicksLimit: 4,
+          stepSize: 2
+        },
+        gridLines: {
+          color: 'black'
+        }
+      }]
+    },
+    elements: {
+      line: {
+        borderWidth: 5
+      },
+      point: {
+        radius: 4,
+        hitRadius: 5,
+        hoverRadius: 4
+      }
+    }
+  }
 
   export default {
 
     name: 'charts',
     components: {
-      MyVuetable
+      MyVuetable,
+      DailyIncome
     },
     computed: {
       ...mapGetters([
@@ -168,22 +275,22 @@
     mounted () {
       this.getBindList()
       this.initDate()
+      this.fillData()
     },
     data () {
       return {
+        format: 'yy-MM-dd hh:mm',
         maclist: [],
         isShowLoading: false,
         rows: [],
         type: 'scatter',
         isAlert: false,
-        isShowTable: true,
-        isShowLine: false,
+        isShowLine: true,
         isShowSearch: true,
         isOverLoading: false,
         bar_show: false,
         plotdata: [],
         isPlotExist: false,
-        layout1: layout,
         api_url: url3,
         fields: FieldDefs,
         info: {
@@ -203,12 +310,25 @@
         items: [],
         obj: '',
         alertTitle: '警告!',
-        alertMessage: '尚未選擇裝置,無法查詢或更新.'
+        alertMessage: '尚未選擇裝置,無法查詢或更新.',
+        mOptions: null,
+        tempData: null,
+        waterData: null,
+        ecData: null,
+        phData: null
       }
     },
     methods: {
+      fillData () {
+        this.tempData = data
+        this.phData = data
+        this.waterData = data
+        this.ecData = data
+        this.mOptions = options
+      },
       initDate () {
         // Verify bind device list
+        // this.tempData = data
         var deviceList = this.$store.getters.bindDeviceList
         if (deviceList.length === 0) {
           this.$store.dispatch('getBindDeviceList').then(response => {
@@ -257,62 +377,41 @@
         this.obj = {mac: this.info.mac, from: fromString, to: toString}
         getDatas(this.obj).then(response => {
           var data = response.data
-          var keys = Object.keys(data)
-          if (keys.length > 0) {
+          console.log('#### data : ' + data)
+          if (data.ph) {
             console.log('#### data length : ' + data.ph.length)
-            this.plotdata = [
-              // {x: data.time, y: data.ec, name: '電導度'},
-              // {x: data.time, y: data.ph, name: '酸鹼度'},
-              // {x: data.time, y: data.water, name: '水含量'},
-              {x: data.time, y: data.temperature, name: '溫度'}]
+            var keys = Object.keys(data)
+            if (keys.length > 0) {
+              // console.log('con : ' + data.temperature.length + '=>' + JSON.stringify(data.temperature))
+              var diff = Math.ceil(data.time.length / 96)
+              var time = []
+              var temp = []
+              var ph = []
+              var water = []
+              var ec = []
 
-            if (this.isPlotExist === false) {
-              console.log('this.isPlotExist === false')
-              Plotly.newPlot(
-                this.$refs.temp,
-                [{x: data.time, y: data.temperature, name: '溫度'}],
-                layout
-              )
-              Plotly.newPlot(
-                this.$refs.ph,
-                [{x: data.time, y: data.ph, name: '酸鹼度'}],
-                layout2
-              )
-              Plotly.newPlot(
-                this.$refs.water,
-                [{x: data.time, y: data.water, name: '水含量'}],
-                layout3
-              )
-              Plotly.newPlot(
-                this.$refs.ec,
-                [{x: data.time, y: data.ec, name: '電導度'}],
-                layout4
-              )
-              this.isPlotExist = true
+              for (let i = 0; i < data.time.length; i = i + diff) {
+                time.push(data.time[i])
+                temp.push(data.temperature[i])
+                // console.log(data.ph[i])
+                ph.push(data.ph[i])
+                ec.push(data.ec[i])
+                water.push(data.water[i])
+              }
+              /* console.log('diff : ' + diff + ', time : ' + time.length)
+              console.log(' temp : ' + temp.length)
+              console.log(' ph : ' + ph.length)
+              console.log('water : ' + water.length)
+              console.log('water : ' + ec.length) */
+              this.tempData = this.getChartData('溫度', time, temp)
+              this.phData = this.getChartData('酸鹼值', time, ph)
+              this.waterData = this.getChartData('水含量', time, water)
+              this.ecData = this.getChartData('導電度', time, ec)
             } else {
-              console.log('this.isPlotExist === true')
-              this.$refs.temp.title = '溫度'
-              this.$refs.temp.data = [{x: data.time, y: data.temperature, name: '溫度'}]
-              Plotly.redraw(this.$refs.temp)
-              this.$refs.ph.title = '酸鹼度'
-              this.$refs.ph.data = [{x: data.time, y: data.ph, name: '酸鹼度'}]
-              Plotly.redraw(this.$refs.ph)
-              this.$refs.water.title = '水含量'
-              this.$refs.water.data = [{x: data.time, y: data.water, name: '水含量'}]
-              Plotly.redraw(this.$refs.water)
-              this.$refs.ec.title = '電導度'
-              this.$refs.ec.data = [{x: data.time, y: data.ec, name: '電導度'}]
-              Plotly.redraw(this.$refs.ec)
+              this.fillData()
             }
           } else {
-            this.$refs.temp.data = [{x: [new Date()], y: [0], name: '溫度'}]
-            Plotly.redraw(this.$refs.temp)
-            this.$refs.ph.data = [{x: [new Date()], y: [0], name: '酸鹼度'}]
-            Plotly.redraw(this.$refs.ph)
-            this.$refs.water.data = [{x: [new Date()], y: [0], name: '水含量'}]
-            Plotly.redraw(this.$refs.water)
-            this.$refs.ec.data = [{x: [new Date()], y: [0], name: '電導度'}]
-            Plotly.redraw(this.$refs.ec)
+            this.fillData()
           }
         }).catch(function (error) {
           console.log(error)
@@ -330,12 +429,10 @@
         }
         console.log('* Info : ' + JSON.stringify(this.info))
       },
-      showPlot () {
-        this.isShowTable = false
+      showChart () {
         this.isShowLine = true
       },
       showTable () {
-        this.isShowTable = true
         this.isShowLine = false
       },
       selectDeviceOption (ele) {
@@ -356,6 +453,14 @@
         if (this.info.mac === '') {
           this.alertMessage = '尚未選擇裝置,無法查詢.'
           this.warning()
+          return
+        }
+        var from = new Date(this.info.from)
+        var to = new Date(this.info.to)
+        if (from.getTime() > to.getTime()) {
+          this.alertMessage = '開始時間大於結束時間.'
+          this.warning()
+          return
         }
         this.isShowLoading = true
         console.log('toLoadData info : ' + JSON.stringify(this.info))
@@ -463,9 +568,6 @@
       hideSearch () {
         this.isShowSearch = false
       },
-      csvData (data) {
-
-      },
       fromChange (date) {
         this.info.from = date
       },
@@ -492,20 +594,25 @@
           desc: this.alertMessage
         })
       },
-      getDateString (date) {
-        var m = date.getMonth() + 1
-        var d = date.getDate()
-        if (m < 10) {
-          m = '0' + m
+      getChartData (label, time, data) {
+        var dataTemp = {
+          labels: time,
+          datasets: [
+            {
+              label: label,
+              backgroundColor: '#b3d1ff',
+              borderColor: '#1a75ff',
+              data: data
+            }
+          ]
         }
-        if (d < 10) {
-          d = '0' + d
-        }
-        return date.getFullYear() + '-' + m + '-' + d + ' 00:00'
+        return dataTemp
       }
     }
   }
 </script>
 <style>
-
+  .sub-chart {
+    padding: 0px;
+  }
 </style>

@@ -12,6 +12,7 @@ const getters = {
   isLoading: state => state.status.isLoading,
   isAddProfile: state => state.status.isAddProfile,
   isAddDevice: state => state.status.isAddDevice,
+  isDeviceForm: state => state.status.isDeviceForm,
   selectBindDevice: state => state.device.selectBindDevice,
   bindDeviceList: state => state.device.bindDeviceList
 }

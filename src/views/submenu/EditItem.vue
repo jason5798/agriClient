@@ -43,7 +43,7 @@
     height: 108px;
     padding: 8px 11px;
   }
-   .site-name {
+  .site-name {
     font-weight: 600;
     color: #ffffff;
     font-size: 19px;

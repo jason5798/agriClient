@@ -53,8 +53,6 @@
   Vue.component('my-detail-row', DetailRow)
   Vue.component('filter-bar', FilterBar)
 
-  var url = '/data/todos/user'
-
   export default {
     components: {
       Vuetable,
@@ -96,17 +94,6 @@
       this.$events.$on('change-option', e => this.onChangeOption())
     },
     methods: {
-      fetchData () {
-        Vue.axios.get(url).then((response) => {
-          var user = response.data
-          this.user = user
-        }).catch(function (error) {
-          console.log(error)
-        })
-      },
-      allcap (value) {
-        return value.toUpperCase()
-      },
       /* genderLabel (value) {
         return value === 'M'
           ? '<span class="ui teal label"><i class="fa fa-male"></i>Male</span>'

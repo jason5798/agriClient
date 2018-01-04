@@ -7,7 +7,7 @@
         </div>
         <div class="col-md-4">
           <a v-show="!isAddProfile" @click="onAddMode"><img class="btn-add m-l21"  src="static/img/btn_add_n.png"/></a>
-          <a v-show="isAddProfile" @click="onEditMode"><img class="btn-add m-l21"  src="static/img/btn_edit_n.png"/></a>
+          <a v-show="isAddProfile" @click="onEditMode"><img class="btn-add m-l21"  src="static/img/btn_edit_p.png"/></a>
         </div>
       </div>
     </div>

@@ -3,63 +3,56 @@
     <div class="card-header">
       <div class="row">
         <div class="col-md-8">
-          <h5><i class="fa fa-map-marker"></i>  綁定裝置設定</h5>
-        </div>
-        <div class="col-md-4">
-          <a v-show="!isAddDevice" @click="onAddMode"><img class="btn-add m-l21"  src="static/img/btn_add_n.png"/></a>
-          <a v-show="isAddDevice" @click="onEditMode"><img class="btn-add m-l21"  src="static/img/btn_edit_n.png"/></a>
+          <h5><i class="fa fa-map-marker"></i>  新增綁定裝置</h5>
         </div>
       </div>
     </div>
     <div class="card-block">
       <div>
         <form role="form">
-          <div v-if="isAddDevice">
+          <div>
             <div class="form-group">
               <label >
-                <h5>新增綁定裝置設定名稱</h5>
+                <h5>裝置名稱</h5>
               </label>
-              <input type="text" v-model="selectBindDevice.name" class="form-control input-lg">
+              <input type="text" v-model="newDevice.name" class="form-control input-lg">
             </div>
           </div>
-          <div v-if="!isAddDevice">
+          <div>
             <div class="form-group">
               <label >
-                <h5>選擇綁定裝置</h5>
+                <h5>裝置識別碼</h5>
               </label>
-              <select v-model="selectBindDevice.name" class="form-control" @change="selectDeviceVal">
-                <option disabled value="">請選擇綁定裝置</option>
-                <option v-for="device in bindDeviceList">{{device.name}}</option>
-              </select>
+              <input type="text" v-model="newDevice.macAddr" class="form-control input-lg"
+                     @input="addEvent" @change="addEvent">
             </div>
           </div>
-          <div v-show="isShowNotifySelect" class="form-group">
+          <div>
+            <div class="form-group">
+              <label >
+                <h5>座標緯度</h5>
+              </label>
+              <input type="number" v-model="newDevice.position.lat" class="form-control input-lg">
+            </div>
+          </div>
+          <div>
+            <div class="form-group">
+              <label >
+                <h5>座標經度</h5>
+              </label>
+              <input type="number" v-model="newDevice.position.lng" class="form-control input-lg">
+            </div>
+          </div>
+          <div  class="form-group">
             <label >
               <h5>選擇異常通知設定</h5>
             </label>
-            <select v-model="selectProfile.name" class="form-control" @change="selectProfileVal">
-              <option disabled value="">請選擇通知設定</option>
-              <option value="">不指定</option>
-              <option v-for="profile in profileList">{{profile.name}}</option>
-            </select>
+            <input v-model="newDevice.profileName" type="text" placeholder="" @click="onMouseClick" class="form-control input-lg"/>
           </div>
-          <button v-show="isAddDevice" type="button" class="btn btn-primary btn-block" @click="onNew">
+          <button type="button" class="btn btn-primary btn-block" @click="onNew">
             <i v-if="isLoading" class='fa fa-spinner fa-spin '></i>
-            <h5 v-else>新增</h5>
+            <h5 v-else><i class="fa fa-plus"></i> 新增</h5>
           </button>
-          <div v-show ="!isAddDevice" class="row">
-            <div class="col-md-6">
-              <button type="button" class="btn btn-primary btn-block" @click="onChange">
-                <i v-if="isLoading" class='fa fa-spinner fa-spin '></i>
-                <h5 v-else>更新</h5>
-              </button>
-            </div>
-            <div class="col-md-6">
-              <button type="button" class="btn btn-danger btn-block" @click="onDelete">
-                刪除
-              </button>
-            </div>
-          </div>
         </form>
       </div>
     </div>
@@ -67,6 +60,23 @@
 </template>
 <script>
   import { mapGetters } from 'vuex'
+  var empty = {
+    name: '',
+    macAddr: '',
+    profileName: '',
+    position: {
+      lat: '',
+      lng: ''
+    }
+  }
+  function checkVal (str) {
+    var regExp = /^[\d|a-zA-Z]+$/
+    if (regExp.test(str)) {
+      return true
+    } else {
+      return false
+    }
+  }
   export default {
     name: 'device-set-form',
     props: {
@@ -79,81 +89,62 @@
         'selectProfile',
         'isLoading',
         'isAddDevice',
-        'profileList'
+        'profileList',
+        'isDeviceForm'
       ])
+    },
+    watch: {
+      selectProfile (val) {
+        if (this.isDeviceForm) {
+          console.log('Device form watch select profile : ' + val.name)
+          this.newDevice.profileName = val.name
+          this.isCurrentDevice = false
+        }
+      }
     },
     data () {
       return {
-        isShowNotifySelect: false,
-        newProfile: '',
-        deviceName: '',
-        btnName: '新增',
-        deviceIndex: 0,
-        isNeedFocus: false,
-        alertTitle: '警告! ',
         alertMessage: '尚未通知設定,無法取得顯示設定.',
-        profileCount: 0
+        newDevice: empty,
+        isCurrentDevice: false
       }
     },
     methods: {
+      addEvent (ele) {
+        var index = ele.target.value.length - 1
+        console.log('addEvent index : ' + index)
+        var str = ele.target.value.charAt(index)
+        console.log('addEvent str : ' + str)
+        if (checkVal(str) !== true) {
+          this.alertMessage = '裝置識別碼只可輸入數字或英文字.'
+          this.newDevice.macAddr = ele.target.value.slice(0, -1)
+          this.warning()
+        }
+        if (index + 1 > 16) {
+          this.alertMessage = '裝置識別碼最多只可輸入16個字元.'
+          this.newDevice.macAddr = ele.target.value.slice(0, -1)
+          this.warning()
+        }
+      },
       onNew () {
-        var newDevice = this.verifyDevice(true)
-        if (newDevice === null) {
+        var result = this.verifyDevice(true)
+        if (result === null) {
           return
         }
         console.log('Child : press new button')
-        this.$emit('click-new', newDevice)
+        this.newDevice.macAddr = this.newDevice.macAddr.toLocaleLowerCase()
+        var sendNew = JSON.parse(JSON.stringify(this.newDevice))
+        this.newDevice.name = ''
+        this.newDevice.profileName = ''
+        this.newDevice.macAddr = ''
+        this.newDevice.position.lat = ''
+        this.newDevice.position.lng = ''
+        this.$emit('click-new', sendNew)
       },
-      onChange () {
-        var newDevice = this.verifyDevice(false)
-        if (newDevice === null) {
-          return
-        }
-        console.log('Child : press change button')
-        this.$emit('click-change', newDevice)
-      },
-      onDelete () {
-        console.log('Child : press delete button')
-        this.$emit('click-delete', this.$store.getters.selectBindDevice)
-      },
-      selectProfileVal (ele) {
-        var name = ele.target.value
-        console.log('child select profile name: ' + JSON.stringify(name))
-        var profileList = this.$store.getters.profileList
-        for (var b = 0; b < profileList.length; b++) {
-          if (profileList[b]['name'] === name) {
-            this.$store.dispatch('setSelectProfile', profileList[b])
-          }
-        }
-        var device = this.$store.getters.selectBindDevice
-        device.profileName = name
-        this.$store.dispatch('setSelectDevice', device)
-      },
-      selectDeviceVal (ele) {
-        this.deviceName = ele.target.value
-        console.log('$$$ NotifySetForm sselectDeviceVa :' + this.deviceName)
-        var deviceList = this.$store.getters.bindDeviceList
-        console.log('$$$ selectDeviceVal deviceList :' + JSON.stringify(deviceList))
-        for (var a = 0; a < deviceList.length; a++) {
-          console.log('####  deviceList[' + a + ']: ' + JSON.stringify(deviceList[a]) + 'select name : ' + this.deviceName)
-          if (deviceList[a].name === this.deviceName) {
-            console.log('$$$$ deviceList[' + a + '].typeName === this.deviceName')
-            this.$store.dispatch('setSelectDevice', deviceList[a])
-          }
-        }
-      },
-      onAddMode () {
-        console.log('Child change to add mode')
-        this.$emit('change-mode', true)
-      },
-      onEditMode () {
-        console.log('Child change to edit mode :  false')
-        if (this.$store.getters.profileList.length === 0) {
-          this.alertMessage = '尚未取得通知設定,無法顯示設定.<br>若是尚未加入,請先新增通知設定.<br>若是已有通知設定,按F5重新整理'
-          this.warning()
-        } else {
-          this.$emit('change-mode', false)
-        }
+      onMouseClick () {
+        this.isCurrentDevice = true
+        this.$store.dispatch('setIsDeviceForm', true)
+        this.$emit('click-profile', null)
       },
       warning () {
         this.$Notice.config({
@@ -165,43 +156,36 @@
           desc: this.alertMessage
         })
       },
-      verifyDevice (isNeedCheckName) {
-        var isOK = true
-        var device = this.$store.getters.selectBindDevice
+      verifyDevice () {
+        var device = this.newDevice
         if (device) {
-          if (isNeedCheckName) {
-            if (device.name === null || device.name === undefined || device.name === '') {
-              this.alertMessage = '尚未輸入裝置名稱.'
-              this.warning()
-              isOK = false
-            } else {
-              var lists = this.$store.getters.bindDeviceList
-              console.log('? verifyDevice select name  : ' + device.name)
-              for (var i = 0; i < lists.length; i++) {
-                console.log('? verifyDevice[ ' + i + '] name  : ' + lists[i].name)
-                if (lists[i].name === device.name) {
-                  this.alertMessage = '輸入通知設定名稱已存在,請更改名稱.'
-                  this.warning()
-                  isOK = false
-                }
+          if (device.name === null || device.name === undefined || device.name === '') {
+            this.alertMessage = '尚未輸入裝置名稱.'
+            this.warning()
+            return null
+          } else {
+            var lists = this.$store.getters.bindDeviceList
+            console.log('? verifyDevice select name  : ' + device.name)
+            for (var i = 0; i < lists.length; i++) {
+              console.log('? verifyDevice[ ' + i + '] name  : ' + lists[i].name)
+              if (lists[i].name === device.name) {
+                this.alertMessage = '輸入通知設定名稱已存在,請更改名稱.'
+                this.warning()
+                return null
               }
             }
           }
           if (device.macAddr === '') {
             this.alertMessage = '尚未設定裝置識別碼.'
             this.warning()
-            isOK = false
+            return null
           }
           if (device.position.lat === '' || device.position.lng === '') {
             this.alertMessage = '尚未設定座標.'
             this.warning()
-            isOK = false
-          }
-          if (isOK) {
-            return device
-          } else {
             return null
           }
+          return 'ok'
         } else {
           return null
         }
