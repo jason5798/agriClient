@@ -137,7 +137,7 @@
 
                     <daily-income
                       :chart-data="tempData"
-                      :options="mOptions"
+                      :options="mOptions1"
                       :width = "400"
                       :height = "300"
                     ></daily-income>
@@ -148,7 +148,7 @@
                     </div>
                     <daily-income
                       :chart-data="phData"
-                      :options="mOptions"
+                      :options="mOptions2"
                       :width = "400"
                       :height = "300"
                     ></daily-income>
@@ -159,7 +159,7 @@
                     </div>
                     <daily-income
                       :chart-data="waterData"
-                      :options="mOptions"
+                      :options="mOptions3"
                       :width = "400"
                       :height = "300"
                     ></daily-income>
@@ -170,7 +170,7 @@
                     </div>
                     <daily-income
                       :chart-data="ecData"
-                      :options="mOptions"
+                      :options="mOptions4"
                       :width = "400"
                       :height = "300"
                     ></daily-income>
@@ -205,7 +205,7 @@
     }
   ] */
   const data = {
-    labels: ['0:00', '現在'],
+    labels: [Date(), Date()],
     datasets: [
       {
         label: 'My First dataset',
@@ -214,7 +214,7 @@
       }
     ]
   }
-  const options = {
+  const options1 = {
     maintainAspectRatio: false,
     legend: {
       display: false
@@ -222,7 +222,9 @@
     scales: {
       xAxes: [{
         gridLines: {
-          color: 'black'
+          display: true,
+          color: 'gray',
+          drawOnChartArea: true
         },
         type: 'time',
         time: {
@@ -230,21 +232,18 @@
             'hour': 'MM/DD HH',
             'day': 'MM/DD'
           }
-        },
-        ticks: {
-          beginAtZero: true,
-          maxTicksLimit: 8,
-          stepSize: 0
         }
       }],
       yAxes: [{
         ticks: {
-          beginAtZero: true,
-          maxTicksLimit: 4,
-          stepSize: 2
+          beginAtZero: false,
+          maxTicksLimit: 5,
+          stepSize: 1
         },
         gridLines: {
-          color: 'black'
+          display: true,
+          color: 'gray',
+          drawOnChartArea: true
         }
       }]
     },
@@ -259,7 +258,47 @@
       }
     }
   }
-
+  const options2 = JSON.parse(JSON.stringify(options1))
+  const options3 = JSON.parse(JSON.stringify(options1))
+  const options4 = JSON.parse(JSON.stringify(options1))
+  console.log('options2.scales :\n' + JSON.stringify(options2.scales))
+  options2.scales.yAxes = [{
+    ticks: {
+      beginAtZero: false,
+      maxTicksLimit: 5,
+      stepSize: 1
+    },
+    gridLines: {
+      display: true,
+      color: 'gray',
+      drawOnChartArea: true
+    }
+  }]
+  console.log('options2.scales :\n' + JSON.stringify(options2.scales))
+  options3.scales.yAxes = [{
+    ticks: {
+      beginAtZero: false,
+      maxTicksLimit: 5,
+      stepSize: 2
+    },
+    gridLines: {
+      display: true,
+      color: 'gray',
+      drawOnChartArea: true
+    }
+  }]
+  options4.scales.yAxes = [{
+    ticks: {
+      beginAtZero: true,
+      maxTicksLimit: 1,
+      stepSize: 0.2
+    },
+    gridLines: {
+      display: true,
+      color: 'gray',
+      drawOnChartArea: true
+    }
+  }]
   export default {
 
     name: 'charts',
@@ -273,9 +312,9 @@
       ])
     },
     mounted () {
+      this.fillData()
       this.getBindList()
       this.initDate()
-      this.fillData()
     },
     data () {
       return {
@@ -311,7 +350,10 @@
         obj: '',
         alertTitle: '警告!',
         alertMessage: '尚未選擇裝置,無法查詢或更新.',
-        mOptions: null,
+        mOptions1: options1,
+        mOptions2: options2,
+        mOptions3: options3,
+        mOptions4: options4,
         tempData: null,
         waterData: null,
         ecData: null,
@@ -324,7 +366,6 @@
         this.phData = data
         this.waterData = data
         this.ecData = data
-        this.mOptions = options
       },
       initDate () {
         // Verify bind device list
@@ -600,7 +641,7 @@
           datasets: [
             {
               label: label,
-              backgroundColor: '#b3d1ff',
+              backgroundColor: 'rgba(0,102,255,0.2)',
               borderColor: '#1a75ff',
               data: data
             }
