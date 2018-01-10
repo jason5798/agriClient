@@ -2,7 +2,7 @@ import fetch from '../utils/fetch'
 
 export function getBindList () {
   return fetch({
-    url: 'todos/bindlist',
+    url: 'todos/bindlist?create=desc',
     method: 'get'
   })
 }

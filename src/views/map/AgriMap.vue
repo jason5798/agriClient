@@ -53,7 +53,7 @@
       markers (val) {
         if (val && val.length > 0) {
           this.iconArr = this.getIconList(val.length)
-          console.log('watch :  val: ' + JSON.stringify(val))
+          // console.log('watch :  val: ' + JSON.stringify(val))
           console.log('watch :  val[0]: ' + JSON.stringify(val[0]))
           console.log('watch :  val[0].position : ' + JSON.stringify(val[0].position))
           this.center = val[0].position

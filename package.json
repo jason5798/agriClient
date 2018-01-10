@@ -1,8 +1,8 @@
 {
   "name": "coreui-vue",
-  "version": "1.0.0-alpha.6",
-  "description": "Open Source Admin Template",
-  "author": "Łukasz Holeczek <lukasz@holeczek.pl>",
+  "version": "1.0.1",
+  "description": "Agri Template",
+  "author": "jason_huang@gemteks.com",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",

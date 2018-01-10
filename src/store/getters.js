@@ -14,6 +14,7 @@ const getters = {
   isAddDevice: state => state.status.isAddDevice,
   isDeviceForm: state => state.status.isDeviceForm,
   selectBindDevice: state => state.device.selectBindDevice,
-  bindDeviceList: state => state.device.bindDeviceList
+  bindDeviceList: state => state.device.bindDeviceList,
+  zoneList: state => state.zone.zoneList
 }
 export default getters

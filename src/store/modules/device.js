@@ -105,6 +105,7 @@ const app = {
           }
           resolve(response)
         }).catch(error => {
+          console.log('return new Promise error :' + error)
           reject(error)
         })
       })

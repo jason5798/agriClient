@@ -40,6 +40,16 @@
   var tmpdata = []
   var icons = []
   var icon1 = {url: 'static/img/ico_manhole_small.png'}
+
+  function getItem (name, selected, length) {
+    var obj = {}
+    obj.title = name
+    obj.isActive = selected
+    obj.total = length
+    obj.active = length
+    return obj
+  }
+
   for (var i = 0; i < 5; i++) {
     icons.push(icon1)
   }
@@ -55,26 +65,7 @@
     },
     data () {
       return {
-        items: [
-          {
-            title: '永齡農場',
-            isActive: true,
-            total: 2,
-            active: 2
-          },
-          {
-            title: '東華',
-            isActive: false,
-            total: 2,
-            active: 2
-          },
-          {
-            title: '區域2',
-            isActive: false,
-            total: 0,
-            active: 0
-          }
-        ],
+        items: [],
         marks: tmpdata,
         markerList: tmpdata[0],
         iconList: icons,
@@ -98,38 +89,79 @@
     },
     methods: {
       init () {
-        this.$store.dispatch('getBindDeviceList').then(response => {
-          var list = response.data
-          this.marks = [[], [], []]
-          for (var j in list) {
-            if ((list[j].name).includes('土壤')) {
-              this.marks[1].push(list[j])
+        if (this.$store.getters.bindDeviceList.length === 0) {
+          this.$store.dispatch('getBindDeviceList').then(response => {
+            console.log('$ getBindDeviceList : ' + JSON.stringify(response.data.length))
+            this.getZones()
+          }).catch(function (error) {
+            console.log('? getBindDeviceList  error :' + error)
+          })
+        } else {
+          this.getZones()
+        }
+        if (this.$store.getters.typeList.length === 0) {
+          this.$store.dispatch('getDeviceType').then(response => {
+            console.log('$ getDeviceType : ' + JSON.stringify(response.data.length))
+          }).catch(function (error) {
+            console.log('? getDeviceType  error :' + error)
+          })
+        }
+        if (this.$store.getters.profileList.length === 0) {
+          this.$store.dispatch('getProfiles').then(response => {
+            console.log('$ getProfiles : ' + JSON.stringify(response.data.length))
+          }).catch(function (error) {
+            console.log('? getProfiles  error :' + error)
+          })
+        }
+      },
+      getZones () {
+        if (this.$store.getters.zoneList.length === 0) {
+          this.$store.dispatch('getZones').then(response => {
+            console.log('$ getZones : ' + response.data.length)
+            this.setMark()
+          }).catch(function (error) {
+            console.log('?  getZones  error :' + error)
+          })
+        } else {
+          this.setMark()
+        }
+      },
+      setMark () {
+        this.marks = []
+        var zones = this.$store.getters.zoneList
+        if (zones) {
+          for (let i = 0; i < zones.length; i++) {
+            if (i === 0) {
+              this.items.push(getItem(zones[i].name, true, zones[i].deviceList.length))
             } else {
-              this.marks[0].push(list[j])
+              this.items.push(getItem(zones[i].name, false, zones[i].deviceList.length))
+            }
+            // console.log('$$$ this.items : ' + JSON.stringify(this.items))
+            this.marks[i] = []
+            if (zones[0].deviceList && zones[0].deviceList.length > 0) {
+              // console.log('zones[' + i + '].deviceList : ' + JSON.stringify(zones[i].deviceList))
+              for (let j = 0; j < zones[i].deviceList.length; j++) {
+                let device = this.getmMarkDeviceByName(zones[i].deviceList[j])
+                // console.log('this.marks[' + i + '] push ' + zones[0].deviceList[j] + ' \n' + JSON.stringify(device))
+                this.marks[i].push(device)
+              }
             }
           }
-          this.markerList = this.marks[0]
-          /* if (!process.env.NODE_ENV === 'production') {
-            console.log('$ Bind list : ' + JSON.stringify(list))
-            console.log(' this.markerList : ' + JSON.stringify(this.markerList))
-            console.log(' this.marks : ' + JSON.stringify(this.marks))
-          } */
-          console.log('init bind list : ' + list.length)
+          if (this.marks.length > 0) {
+            this.markerList = this.marks[0]
+          }
           console.log('init this.markerList : ' + this.markerList.length)
           console.log('init this.marks : ' + this.marks.length)
-        }).catch(function (error) {
-          console.log('? getBindDeviceList  error :' + error)
+        }
+      },
+      getmMarkDeviceByName (name) {
+        let returnDevice = null
+        this.$store.getters.bindDeviceList.forEach(function (device) {
+          if (Object.is(name, device.name)) {
+            returnDevice = device
+          }
         })
-        this.$store.dispatch('getDeviceType').then(response => {
-          console.log('$ getDeviceType : ' + JSON.stringify(response.data))
-        }).catch(function (error) {
-          console.log('? getDeviceType  error :' + error)
-        })
-        this.$store.dispatch('getProfiles').then(response => {
-          console.log('$ getProfiles : ' + JSON.stringify(response.data))
-        }).catch(function (error) {
-          console.log('? getProfiles  error :' + error)
-        })
+        return returnDevice
       },
       insertArr (arr, index, item) {
         return arr.splice(index, 0, item)

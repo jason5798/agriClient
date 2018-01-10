@@ -14,6 +14,53 @@
         <profile-table :titles="titleData" :isDisable="isDisable"></profile-table>
       </div>
     </div>
+    <!------------------------------------ spinner -------------------------------->
+    <spinner ref="spinner" size="xl"  text="處理中........."></spinner>
+    <!------------------------------------ Delete modal -------------------------------->
+    <modal title="Modal title" class="modal-danger" v-model="deleteModal" @ok="deleteModal = false" effect="fade/zoom">
+      <div slot="modal-header" class="modal-header">
+        <h4 class="modal-title">刪除異常通知</h4>
+      </div>
+      <div slot="modal-body" class="modal-body">
+        <label >
+          <h5>確定要刪除異常通知 [ {{this.profileName}} ]?</h5>
+        </label>
+      </div>
+      <div slot="modal-footer" class="modal-footer">
+        <button type="button" class="btn btn-default" @click="deleteModal = false">離開</button>
+        <button type="button" class="btn btn-danger" @click="toDeleteProfile">刪除</button>
+      </div>
+    </modal>
+    <!------------------------------------ Update modal -------------------------------->
+    <modal title="Modal title" class="modal-primary" v-model="updateModal" @ok="updateModal = false" effect="fade/zoom">
+      <div slot="modal-header" class="modal-header">
+        <h4 class="modal-title">更新異常通知</h4>
+      </div>
+      <div slot="modal-body" class="modal-body">
+        <label >
+          <h5>確定要更新異常通知 [ {{this.profileName}} ]?</h5>
+        </label>
+      </div>
+      <div slot="modal-footer" class="modal-footer">
+        <button type="button" class="btn btn-default" @click="updateModal = false">離開</button>
+        <button type="button" class="btn btn-primary" @click="toUpdateProfile">更新</button>
+      </div>
+    </modal>
+    <!------------------------------------ Add modal -------------------------------->
+    <modal title="Modal title" class="modal-primary" v-model="addModal" @ok="addModal = false" effect="fade/zoom">
+      <div slot="modal-header" class="modal-header">
+        <h4 class="modal-title">新增異常通知</h4>
+      </div>
+      <div slot="modal-body" class="modal-body">
+        <label >
+          <h5>確定要新增異常通知 [ {{this.profileName}} ]?</h5>
+        </label>
+      </div>
+      <div slot="modal-footer" class="modal-footer">
+        <button type="button" class="btn btn-default" @click="addModal = false">離開</button>
+        <button type="button" class="btn btn-primary" @click="toAddProfile">新增</button>
+      </div>
+    </modal>
   </div>
 </template>
 <script>
@@ -21,18 +68,27 @@
   import NotifySetForm from './submenu/NotifySetForm'
   import ProfileTable from './table/profileTable'
   import {getProfileByType} from '../api/profileSetting'
+  import {modal, spinner} from 'vue-strap'
+  // import VerifyModal from './modal/VerifyModal'
 
   export default {
     name: 'profiles',
     components: {
       ProfileTable,
-      NotifySetForm
+      NotifySetForm,
+      modal,
+      spinner
     },
     created () {
       this.initData()
     },
     data () {
       return {
+        addModal: false,
+        updateModal: false,
+        deleteModal: false,
+        currentProfile: null,
+        profileName: '',
         profileCount: 0,
         firstDevice: '請選擇裝置',
         firstProfile: '請選擇通知設定',
@@ -86,32 +142,59 @@
         }
       },
       onAddProfile (profile) {
+        this.currentProfile = profile
+        this.profileName = profile.name
+        this.addModal = true
+      },
+      toAddProfile () {
         // Add profile to global profile list
-        this.$store.dispatch('addProfile', profile).then(response => {
+        this.addModal = false
+        this.$refs.spinner.show()
+        this.$store.dispatch('addProfile', this.currentProfile).then(response => {
           console.log('$ onAddProfile : ' + JSON.stringify(response.data))
           this.setCurrentStatus(false)
+          this.$refs.spinner.hide()
         }).catch(function (error) {
           console.log('? onAddProfile  error :' + error)
+          this.$refs.spinner.hide()
         })
       },
       onUpdateProfile (profile) {
-        console.log('Parent : press update button  profile  : ' + JSON.stringify(profile))
+        this.currentProfile = profile
+        this.profileName = profile.name
+        this.updateModal = true
+      },
+      toUpdateProfile () {
+        this.updateModal = false
+        this.$refs.spinner.show()
+        console.log('Parent : press update button  profile  : ' + JSON.stringify(this.currentProfile))
         // Add profile to global profile list
-        this.$store.dispatch('updateProfile', profile).then(response => {
+        this.$store.dispatch('updateProfile', this.currentProfile).then(response => {
           console.log('$ onAddProfile : ' + JSON.stringify(response.data))
           this.setCurrentStatus(false)
+          this.$refs.spinner.hide()
         }).catch(function (error) {
           console.log('? onAddProfile  error :' + error)
+          this.$refs.spinner.hide()
         })
       },
       onDeleteProfile (profile) {
-        console.log('Parent : press update button  profile  name: ' + profile.name)
+        this.currentProfile = profile
+        this.profileName = profile.name
+        this.deleteModal = true
+      },
+      toDeleteProfile () {
+        this.deleteModal = false
+        this.$refs.spinner.show()
+        console.log('Parent : press update button  profile  name: ' + this.currentProfile.name)
         // Delete profile to global profile list
-        this.$store.dispatch('deleteProfile', profile.name).then(response => {
+        this.$store.dispatch('deleteProfile', this.currentProfile.name).then(response => {
           console.log('$ onDeleteProfile : ' + JSON.stringify(response.data))
           this.setCurrentStatus(false)
+          this.$refs.spinner.hide()
         }).catch(function (error) {
           console.log('? onDeleteProfile  error :' + error)
+          this.$refs.spinner.hide()
         })
       },
       changeMode (val) {

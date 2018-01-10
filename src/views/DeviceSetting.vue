@@ -1,6 +1,5 @@
 <template>
   <div class="container-giot">
-
     <div class="row row-giot">
       <div  class="col-md-3">
         <device-set-form
@@ -19,8 +18,8 @@
         </device-table>
       </div>
     </div>
-    <spinner ref="spinner" size="xl" fixed="true" text="處理中........."></spinner>
-    <modal title="Modal title" large class="modal-primary" v-model="myModal" @ok="myModal = false" effect="fade/zoom">
+    <spinner ref="spinner" size="xl" text="處理中........."></spinner>
+    <modal title="Modal title" large class="{'modal-danger':effect === 'fade','modal-lg':large,'modal-sm':small}" v-model="myModal" @ok="myModal = false" effect="fade/zoom">
       <div slot="modal-header" class="modal-header">
         <h4 class="modal-title">異常通知設定選擇</h4>
       </div>
